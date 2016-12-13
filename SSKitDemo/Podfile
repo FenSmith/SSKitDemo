@@ -1,0 +1,11 @@
+# Uncomment this line to define a global platform for your project
+platform :ios, ‘8.0’
+
+target 'SSKitDemo' do
+  pod 'SSKit'
+  pod 'SSAlertView'
+  pod 'SSInherits'
+  pod 'Realm', '~> 0.102.1'
+  pod 'YYModel'
+  pod 'FDFullscreenPopGesture'
+end
