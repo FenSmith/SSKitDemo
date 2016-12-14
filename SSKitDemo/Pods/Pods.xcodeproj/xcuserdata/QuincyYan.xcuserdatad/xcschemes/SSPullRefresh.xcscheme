@@ -14,7 +14,7 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = '339707E763EBC3C264CA34F8FD8BFE4D'
+               BlueprintIdentifier = 'ECFF0665B6B27F88A06088E789E68083'
                BlueprintName = 'SSPullRefresh'
                ReferencedContainer = 'container:Pods.xcodeproj'
                BuildableName = 'libSSPullRefresh.a'>

@@ -14,7 +14,7 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = '168B0C60D02B2D61DF8BE0938698CDFA'
+               BlueprintIdentifier = 'EDA929FBC20444147C047BA2352759A9'
                BlueprintName = 'SSDialog'
                ReferencedContainer = 'container:Pods.xcodeproj'
                BuildableName = 'libSSDialog.a'>

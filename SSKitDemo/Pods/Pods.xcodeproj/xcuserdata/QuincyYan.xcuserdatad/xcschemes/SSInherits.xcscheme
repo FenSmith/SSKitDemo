@@ -14,7 +14,7 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = 'F149F3AEC1043499DF392CA334C30888'
+               BlueprintIdentifier = '154BB358BB3FF2FF7978A2EC2A6D6128'
                BlueprintName = 'SSInherits'
                ReferencedContainer = 'container:Pods.xcodeproj'
                BuildableName = 'libSSInherits.a'>

@@ -14,7 +14,7 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = '909937A725347C24332D8B4E4B29394C'
+               BlueprintIdentifier = '6C100D513AC6FC1066C05E6268BE8799'
                BlueprintName = 'SSTabbar'
                ReferencedContainer = 'container:Pods.xcodeproj'
                BuildableName = 'libSSTabbar.a'>

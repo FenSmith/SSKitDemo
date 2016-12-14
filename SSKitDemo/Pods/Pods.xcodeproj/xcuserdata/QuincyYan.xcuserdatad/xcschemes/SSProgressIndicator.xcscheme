@@ -14,7 +14,7 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = '25834888246C223E119B5DF8CFA14CC5'
+               BlueprintIdentifier = 'D7150ED06D9FFC708AFEC5DA5AACACEF'
                BlueprintName = 'SSProgressIndicator'
                ReferencedContainer = 'container:Pods.xcodeproj'
                BuildableName = 'libSSProgressIndicator.a'>

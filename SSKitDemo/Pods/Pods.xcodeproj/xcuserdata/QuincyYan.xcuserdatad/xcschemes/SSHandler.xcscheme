@@ -14,7 +14,7 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = '85535B03B779C9278EFC2C0016F127D4'
+               BlueprintIdentifier = '2D9F1B3669C90E24CAA54B10FB67EA70'
                BlueprintName = 'SSHandler'
                ReferencedContainer = 'container:Pods.xcodeproj'
                BuildableName = 'libSSHandler.a'>
