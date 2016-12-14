@@ -18,7 +18,9 @@
                                                   return @(phone.length == 11);
                                               }];
     
+    @weakify(self);
     self.userRegistCommand = [[RACCommand alloc] initWithSignalBlock:^RACSignal *(id input) {
+        @strongify(self);
         if (!self.phone || self.phone.length != 11) {
             [SSDialog showDialogWithType:SSDialogTypeWrong details:@"请输入正确的手机号码"];
         } else {
