@@ -66,7 +66,6 @@
 		2F3E3EEF1E001BAD008F290A /* DTBVideoDetailModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F3E3EE61E001BAD008F290A /* DTBVideoDetailModel.m */; };
 		2F3E3EF01E001BAD008F290A /* DTBVideoModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F3E3EE81E001BAD008F290A /* DTBVideoModel.m */; };
 		2F3E3EF11E001BAD008F290A /* DTBVideoReplyModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F3E3EEA1E001BAD008F290A /* DTBVideoReplyModel.m */; };
-		2F3E3F001E001BBD008F290A /* DTBCommentRealmModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F3E3EFF1E001BBD008F290A /* DTBCommentRealmModel.m */; };
 		2F3E3F071E001BC6008F290A /* DTBUserModel+SSAdd.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F3E3F021E001BC6008F290A /* DTBUserModel+SSAdd.m */; };
 		2F3E3F081E001BC6008F290A /* UIColor+DTBAdd.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F3E3F041E001BC6008F290A /* UIColor+DTBAdd.m */; };
 		2F3E3F091E001BC6008F290A /* UIImageView+DTBAdd.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F3E3F061E001BC6008F290A /* UIImageView+DTBAdd.m */; };
@@ -186,8 +185,6 @@
 		2F3E3EE91E001BAD008F290A /* DTBVideoReplyModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DTBVideoReplyModel.h; sourceTree = "<group>"; };
 		2F3E3EEA1E001BAD008F290A /* DTBVideoReplyModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DTBVideoReplyModel.m; sourceTree = "<group>"; };
 		2F3E3EF41E001BB2008F290A /* DTBRequestManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DTBRequestManager.h; sourceTree = "<group>"; };
-		2F3E3EFE1E001BBD008F290A /* DTBCommentRealmModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DTBCommentRealmModel.h; sourceTree = "<group>"; };
-		2F3E3EFF1E001BBD008F290A /* DTBCommentRealmModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DTBCommentRealmModel.m; sourceTree = "<group>"; };
 		2F3E3F011E001BC6008F290A /* DTBUserModel+SSAdd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "DTBUserModel+SSAdd.h"; sourceTree = "<group>"; };
 		2F3E3F021E001BC6008F290A /* DTBUserModel+SSAdd.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "DTBUserModel+SSAdd.m"; sourceTree = "<group>"; };
 		2F3E3F031E001BC6008F290A /* UIColor+DTBAdd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+DTBAdd.h"; sourceTree = "<group>"; };
@@ -275,8 +272,6 @@
 		2F3E3DF41E00192B008F290A /* Local */ = {
 			isa = PBXGroup;
 			children = (
-				2F3E3EFE1E001BBD008F290A /* DTBCommentRealmModel.h */,
-				2F3E3EFF1E001BBD008F290A /* DTBCommentRealmModel.m */,
 			);
 			path = Local;
 			sourceTree = "<group>";
@@ -711,7 +706,6 @@
 				2F3E3F421E001EA4008F290A /* DTBLoginHeaderView.m in Sources */,
 				2F3E3EEC1E001BAD008F290A /* DTBCommunityModel.m in Sources */,
 				2F3E3F501E001ECC008F290A /* DTBLoginViewModel.m in Sources */,
-				2F3E3F001E001BBD008F290A /* DTBCommentRealmModel.m in Sources */,
 				2F3E3E6F1E001B70008F290A /* DTBUserHeaderView.m in Sources */,
 				2F3E3E961E001B84008F290A /* DTBClubDetailViewModel.m in Sources */,
 				2F3E3E271E001B61008F290A /* DTBRegistCaptchaCell.m in Sources */,
