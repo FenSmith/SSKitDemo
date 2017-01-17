@@ -6,7 +6,7 @@
 //  Copyright © 2016年 Quincy Yan. All rights reserved.
 //
 
-#import <SSKit/SSView.h>
+#import <SSKit/SSKitHeader.h>
 
 @interface DTBCaptchaSheetView : SSView
 

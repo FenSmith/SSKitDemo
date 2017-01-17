@@ -12,16 +12,8 @@
 //-------
 // SSKit
 //-------
-#import <SSKit/SSKit.h>
-#import <SSCategory/SSCategory.h>
-#import <SSConfigure/SSConfigure.h>
-#import <SSService/SSRequestService.h>
-#import <SSHandler/SSErrorHandler.h>
-
-#import <SSDialog+SSAdd.h>
-#import <SSInherits/SSPlaceHolderTextView.h>
+#import <SSKit/SSKitHeader.h>
 #import <SSTabbar/SSTabbar.h>
-#import <SSAlertView/SSAlertView+SSAdd.h>
 
 //-------------
 // App Category

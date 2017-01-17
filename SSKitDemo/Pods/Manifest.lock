@@ -35,35 +35,66 @@ PODS:
   - SSCategory/UIKit (0.1.0):
     - Masonry
     - SSCategory/Foundation
-  - SSConfigure (0.0.3)
-  - SSDialog (0.0.1)
-  - SSHandler (0.6.1):
-    - SSConfigure
-    - SSDialog
+  - SSDialog (1.0.0)
   - SSInherits (0.0.1)
-  - SSKit (1.2.4):
+  - SSKit (2.0.1):
+    - FDFullscreenPopGesture
+    - KMNavigationBarTransition
+    - SSAlertView
+    - SSInherits
+    - SSKitUtility
+    - SSMVVM
+  - SSKitUtility (0.0.1):
     - AFNetworking (~> 3.1.0)
-    - KMNavigationBarTransition (~> 0.0.10)
+    - ReactiveCocoa (~> 2.5)
+    - SSDialog
+    - SSKitUtility/SSKitConfigure (= 0.0.1)
+    - SSKitUtility/SSKitHandler (= 0.0.1)
+    - SSKitUtility/SSKitService (= 0.0.1)
+  - SSKitUtility/SSKitConfigure (0.0.1):
+    - AFNetworking (~> 3.1.0)
+    - ReactiveCocoa (~> 2.5)
+    - SSDialog
+  - SSKitUtility/SSKitHandler (0.0.1):
+    - AFNetworking (~> 3.1.0)
+    - ReactiveCocoa (~> 2.5)
+    - SSDialog
+    - SSKitUtility/SSKitConfigure
+  - SSKitUtility/SSKitService (0.0.1):
+    - AFNetworking (~> 3.1.0)
+    - ReactiveCocoa (~> 2.5)
+    - SSDialog
+    - SSKitUtility/SSKitHandler
+  - SSMVVM (1.0.0):
+    - AFNetworking (~> 3.1.0)
     - Masonry (~> 1.0.1)
     - ReactiveCocoa (~> 2.5)
     - SDWebImage (~> 3.8.2)
     - SSCategory
-    - SSConfigure
     - SSDialog
-    - SSHandler
+    - SSKitUtility
+    - SSMVVM/SSMVVM (= 1.0.0)
     - SSProgressIndicator
     - SSPullRefresh
-    - SSService
+    - SSStatus
+    - SSTabbar
+    - TPKeyboardAvoiding (~> 1.3)
+  - SSMVVM/SSMVVM (1.0.0):
+    - AFNetworking (~> 3.1.0)
+    - Masonry (~> 1.0.1)
+    - ReactiveCocoa (~> 2.5)
+    - SDWebImage (~> 3.8.2)
+    - SSCategory
+    - SSDialog
+    - SSKitUtility
+    - SSProgressIndicator
+    - SSPullRefresh
     - SSStatus
     - SSTabbar
     - TPKeyboardAvoiding (~> 1.3)
   - SSProgressIndicator (0.0.1)
   - SSPullRefresh (0.0.1):
     - Masonry
-  - SSService (0.3.1):
-    - AFNetworking (~> 3.1.0)
-    - ReactiveCocoa (~> 2.5)
-    - SSHandler
   - SSStatus (0.0.2):
     - Masonry
   - SSTabbar (0.0.1)
@@ -71,9 +102,6 @@ PODS:
   - YYModel (1.0.4)
 
 DEPENDENCIES:
-  - FDFullscreenPopGesture
-  - SSAlertView
-  - SSInherits
   - SSKit
   - YYModel
 
@@ -86,19 +114,18 @@ SPEC CHECKSUMS:
   SDWebImage: 098e97e6176540799c27e804c96653ee0833d13c
   SSAlertView: f9f8e8eb5b0cc2d6bfbdb697b85551850c92cec2
   SSCategory: baefbae90c79bedfc65b70a839d4dc5db33f06ab
-  SSConfigure: 331e20ff8921429155201ced2d1f63743024da20
-  SSDialog: 89080cee581f1fd6a60d63805ffeec541782d5ef
-  SSHandler: 5512e864ef67a17f2d111305c87ae2f0c317c56c
+  SSDialog: 7c2c36f6c7ef79db57dcaf99c2e48246b7496283
   SSInherits: 9a3e4c6f2606b27757005473faa63cfe762ded43
-  SSKit: 55c00b061b332b970b1b3c6aeb60b56f96cee034
+  SSKit: f85f02533c1c1d18228fd4d2dc5277ed58782069
+  SSKitUtility: 6b1793e8f2e312dcc707ff58ad572b00cb0c59cb
+  SSMVVM: 3dda0caba3852cdcf8f878bb3c8c3cb78135357f
   SSProgressIndicator: 83e75523a31389728dc64faf3b024c749ac39672
   SSPullRefresh: daad36d7f0ba2ea3dd3eab09db2709207b3ad8ad
-  SSService: b22dd19da08a5d0b1ae98c1c0b05d3cea7dda2ac
   SSStatus: e8b4368d0279cfcce9b00a889790a4dc362019f9
   SSTabbar: 7a5870008c420a2183118e406152eb2464a8668d
   TPKeyboardAvoiding: 0d6af20e95e2850f4c621841225b59ec7d8dd852
   YYModel: 2a7fdd96aaa4b86a824e26d0c517de8928c04b30
 
-PODFILE CHECKSUM: 20b17edc03faa792daedaba4d70139b1838bff7c
+PODFILE CHECKSUM: 9713c88f15335bd4dac782987ed3a82e7cb30bd5
 
-COCOAPODS: 1.0.1
+COCOAPODS: 1.2.0.rc.1

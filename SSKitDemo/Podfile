@@ -3,8 +3,5 @@ platform :ios, ‘8.0’
 
 target 'SSKitDemo' do
   pod 'SSKit'
-  pod 'SSAlertView'
-  pod 'SSInherits'
   pod 'YYModel'
-  pod 'FDFullscreenPopGesture'
 end

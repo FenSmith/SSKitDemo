@@ -7,7 +7,6 @@
 //
 
 #import "AppDelegate.h"
-#import <SSAppHandler.h>
 
 @interface AppDelegate () <SSAppHandlerDelegate>
 
