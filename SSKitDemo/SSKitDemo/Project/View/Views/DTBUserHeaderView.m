@@ -47,9 +47,9 @@
     
     [self viewAddTapGestureWithHandler:^{
         if ([DTBUserModel isUserLogin]) {
-            [SSPageRouter openProtocol:@"sspage://DTBUserDetailViewModel"];
+            [SSPageRouter openProtocol:@"sspr://DTBUserDetailViewModel"];
         } else {
-            [SSPageRouter openProtocol:@"sspage://DTBLoginViewModel"];
+            [SSPageRouter openProtocol:@"sspr://DTBLoginViewModel"];
         }
     }];
 }

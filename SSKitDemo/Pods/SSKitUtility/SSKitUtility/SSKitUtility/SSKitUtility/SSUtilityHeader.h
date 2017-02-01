@@ -28,4 +28,9 @@
 #import "SSAppHandler.h"
 #import "SSErrorHandler.h"
 
+///-----------
+/// SSCategory
+///-----------
+#import "SSCategory.h"
+
 #endif /* SSUtilityHeader_h */

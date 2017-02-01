@@ -8,23 +8,24 @@
 
 #import <Foundation/Foundation.h>
 #import "SSViewModelService.h"
-
 #import <ReactiveCocoa/ReactiveCocoa.h>
 #import <SSKitUtility/SSEnums.h>
 
 @interface SSViewModel : NSObject
 
-// 初始化方法
-- (instancetype)initWithService:(id<SSViewModelService>)service;
-- (instancetype)initWithService:(id<SSViewModelService>)service alsoViewModleParams:(NSDictionary *)params;
-- (instancetype)initWithService:(id<SSViewModelService>)service alsoTitle:(NSString *)title;
+/**
+ 初始化方法
+ */
+- (instancetype)initWithService:(id<SSViewModelService>)service fetchParams:(NSDictionary *)params;
 
-// 初始化后调用的方法
+/**
+ 初始化后调用的方法
+ */
 - (void)viewModelDidLoad; // Step1
 - (void)viewModelLoadNotifications; // Step2
 
 /**
- 用于页面跳转逻辑
+ service 用于页面跳转逻辑
  例 : [self.service pushViewModel:XXX animated:YES]
  */
 @property (nonatomic,strong) id<SSViewModelService> service;
@@ -32,19 +33,23 @@
 @property (nonatomic) SSPageTitleType titleType;
 
 /**
- 自定义参数
+ vm中自定义参数
  参数中的键值需与对应‘Controller’的属性名称一致
  以映射相应的数据
  例 : @{@"title":自定义参数} => self.title = @"自定义参数";
  */
-@property (nonatomic,strong) NSDictionary *params;
+@property (nonatomic,strong) NSDictionary *params4vm;
 
 /**
- viewModel中的参数
+ 控制器中自定义参数
+ 上同
  */
-@property (nonatomic,strong) NSDictionary *viewModelParams;
+@property (nonatomic,strong) NSDictionary *params4ctr;
 
-@property (nonatomic,copy) NSString *title; // 控制器标题
+/**
+ 控制器中的标题
+ */
+@property (nonatomic,copy) NSString *title;
 - (NSString *)titleForViewModel;
 
 /**
@@ -66,6 +71,6 @@
  是否隐藏默认加载的返回按钮
  默认为'NO' 不隐藏
  */
-- (BOOL)hidesReturnButton;
+- (BOOL)hidesReturnNavigaionItem;
 
 @end

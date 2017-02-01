@@ -72,7 +72,7 @@
     return self;
 }
 
-- (void)bindWithDataSource:(DTBVideoDetailModel *)dataSource indexPath:(NSIndexPath *)indexPath {
+- (void)bindWithDataSource:(DTBVideoDetailModel *)dataSource forIndexPath:(NSIndexPath *)indexPath {
     [self.avatorView sd_setImageWithURL:[NSURL URLWithString:dataSource.user.avator] placeholderImage:nil];
     self.nameLabel.text = dataSource.user.name;
     self.commentsLabel.text = dataSource.comments;

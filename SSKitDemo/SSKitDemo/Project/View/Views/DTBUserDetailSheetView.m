@@ -37,13 +37,13 @@
 
     [[self.sheetButton rac_signalForControlEvents:1<<6]
      subscribeNext:^(id x) {
-         [SSAlertView showTitle:@"退出登录"
-                    alsoContent:@"你确定要退出该账号吗"
-                       alsoOpts:@[@"确定"]
-                       callback:^(NSInteger index) {
+         [SSAlertView showAlertViewWithTitle:@"退出登录"
+                    withContent:@"你确定要退出该账号吗"
+                       withOptions:@[@"确定"]
+                       withCallback:^(NSInteger index) {
                            if (index == 1) {
                                [DTBUserModel clearUserData];
-                               [SSPageRouter pagePop:YES];
+                               [SSPageRouter closePage];
                            }
                        }];
      }];

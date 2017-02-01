@@ -12,7 +12,7 @@
 
 #import <ReactiveCocoa/ReactiveCocoa.h>
 #import <ReactiveCocoa/RACEXTScope.h>
-#import <SSPullRefresh/SSPullRefresh.h>
+#import <SSWrapper/SSPullRefresh.h>
 
 @interface SSTableViewController()
 /**
@@ -34,7 +34,7 @@
              subscribeNext:^(id x) {
                  @strongify(self);
                  if (self.viewModel.isAllowLoadData) {
-                     [self.tableView.pullReloadView startPullReloading];
+                     [self.tableView.reloadView startRefreshing];
                  }
              }];
         }
@@ -68,7 +68,7 @@
             [self dataRequestStartOnlyOnce];
         }
         
-        [self.tableView addPullReload:^{
+        [self.tableView sspr_insertReloadViewAttachCallback:^{
             @strongify(self);
             self.viewModel.page = 0;
             if ([self respondsToSelector:@selector(dataRequestStart)]) {
@@ -81,25 +81,25 @@
                  if ([self respondsToSelector:@selector(dataRequestSuccess:)]) {
                      [self dataRequestSuccess:x];
                  }
-                 [self.tableView.pullReloadView stopPullReloading];
+                 [self.tableView.reloadView stopRefreshing];
              } error:^(NSError *error) {
                  @strongify(self);
                  if ([self respondsToSelector:@selector(dataRequestError:)]) {
                      [self dataRequestError:error];
                  }
-                 [self.tableView.pullReloadView stopPullReloading];
+                 [self.tableView.reloadView stopRefreshing];
              } completed:^{
                  @strongify(self);
                  if ([self respondsToSelector:@selector(dataRequestFinished)]) {
                      [self dataRequestFinished];
                  }
-                 [self.tableView.pullReloadView stopPullReloading];
+                 [self.tableView.reloadView stopRefreshing];
              }];
         }];
     }
     
     if (self.viewModel.isAllowLoadAdditionalData) {
-        [self.tableView addPullLoading:^{
+        [self.tableView sspr_insertLoadingViewAttachCallback:^{
             @strongify(self);
             if ([self respondsToSelector:@selector(dataRequestStart)]) {
                 [self dataRequestStart];
@@ -111,19 +111,19 @@
                  if ([self respondsToSelector:@selector(dataRequestSuccess:)]) {
                      [self dataRequestSuccess:x];
                  }
-                 [self.tableView.pullLoadingView stopPullLoading];
+                 [self.tableView.loadingView stopRefreshing];
              } error:^(NSError *error) {
                  @strongify(self);
                  if ([self respondsToSelector:@selector(dataRequestError:)]) {
                      [self dataRequestError:error];
                  }
-                 [self.tableView.pullLoadingView stopPullLoading];
+                 [self.tableView.loadingView stopRefreshing];
              } completed:^{
                  @strongify(self);
                  if ([self respondsToSelector:@selector(dataRequestFinished)]) {
                      [self dataRequestFinished];
                  }
-                 [self.tableView.pullLoadingView stopPullLoading];
+                 [self.tableView.loadingView stopRefreshing];
              }];
         }];
     }

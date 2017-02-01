@@ -10,6 +10,7 @@
 #import "DTBLoginCell.h"
 #import "DTBRegistSheetView.h"
 #import "DTBRegistViewModel.h"
+#import <TPKeyboardAvoidingTableView.h>
 
 @interface DTBRegistController ()
 @property (nonatomic,strong) DTBRegistSheetView *sheetView;

@@ -13,13 +13,13 @@
 #import <ReactiveCocoa/ReactiveCocoa.h>
 #import <ReactiveCocoa/RACEXTScope.h>
 #import <AFNetworking/AFNetworking.h>
-#import <SSStatus/UIView+StatusAdd.h>
-#import <SSProgressIndicator/SSProgressIndicator.h>
-#import <SSCategory/UIColor+SSKit.h>
+#import <SSWrapper/UIView+StatusAdd.h>
+#import <SSWrapper/SSWebProgressView.h>
+#import <SSKitUtility/UIColor+SSKit.h>
 #import <SSKitUtility/SSAppHandler.h>
 
 @interface SSHTTPController ()<UIWebViewDelegate>
-@property (nonatomic,strong) SSProgressIndicator *progressIndicator;
+@property (nonatomic,strong) SSWebProgressView *progressView;
 
 @property (nonatomic,strong) SSHTTPViewModel *viewModel;
 @end
@@ -34,8 +34,8 @@
         make.edges.equalTo(self.view);
     }];
     
-    [self.view addSubview:self.progressIndicator];
-    [self.progressIndicator mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.view addSubview:self.progressView];
+    [self.progressView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.top.equalTo(self.view);
         make.height.mas_offset(3);
     }];
@@ -45,17 +45,17 @@
     [super bindViewModel];
     
     @weakify(self);
-    [RACObserve(self.viewModel, HTTPUrl)
-     subscribeNext:^(NSString *url) {
+    [RACObserve(self.viewModel, linkURL)
+     subscribeNext:^(NSString *linkURL) {
          @strongify(self);
-         [self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:url]]];
+         [self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:linkURL]]];
      }];
     
     if (![AFNetworkReachabilityManager sharedManager].isReachable) {
         @weakify(self);
-        [self.view showStatusViewWithType:SSStatusViewTypeNetworkError alsoCallback:^{
+        [self.view viewAddStatusWithType:SSStatusViewTypeNetworkError forTouchCallback:^(SSStatusBaseView *baseView) {
             @strongify(self);
-            [self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:self.viewModel.HTTPUrl]]];
+            [self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:self.viewModel.linkURL]]];
         } isDisplayCallback:^BOOL{
             if ([AFNetworkReachabilityManager sharedManager].isReachable) {
                 return NO;
@@ -70,19 +70,19 @@
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
-    if (!self.viewModel.title || self.viewModel.title.length == 0) {
+    if (!_viewModel.title || _viewModel.title.length == 0) {
         NSString *title = [webView stringByEvaluatingJavaScriptFromString:@"document.title"];
         if (title.length > 20) {
             title = [title substringToIndex:20];
         }
-        self.viewModel.title = title;
+        _viewModel.title = title;
     }
     
-    [self.progressIndicator stopAnimating];
+    [_progressView webViewFinishLoading];
 }
 
 - (void)webViewDidStartLoad:(UIWebView *)webView {
-    [self.progressIndicator startAnimating];
+    [_progressView webViewReadyToLoading];
 }
 
 - (UIWebView *)webView {
@@ -95,12 +95,12 @@
     return _webView;
 }
 
-- (SSProgressIndicator *)progressIndicator {
-    if (!_progressIndicator) {
-        _progressIndicator = [[SSProgressIndicator alloc] init];
-        _progressIndicator.strokeColor = [SSAppHandler sharedHander].webProgressIndicatorColor;
+- (SSWebProgressView *)progressView {
+    if (!_progressView) {
+        _progressView = [[SSWebProgressView alloc] init];
+        _progressView.fillColor = [SSAppHandler sharedHander].webProgressIndicatorColor;
     }
-    return _progressIndicator;
+    return _progressView;
 }
 
 @end

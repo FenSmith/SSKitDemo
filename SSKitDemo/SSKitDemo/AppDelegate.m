@@ -21,7 +21,7 @@
     
     _window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     _window.backgroundColor = [UIColor whiteColor];
-    [SSPageRouter resetPageWithProtocol:@"sspage://DTBTabbarViewModel"];
+    [SSPageRouter resetPageAttachProtocol:@"sspr://DTBTabbarViewModel"];
     [_window makeKeyAndVisible];
     
     return YES;

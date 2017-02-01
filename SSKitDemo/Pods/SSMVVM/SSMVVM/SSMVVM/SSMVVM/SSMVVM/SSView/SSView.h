@@ -11,10 +11,14 @@
 @class SSViewModel;
 @interface SSView : UIView
 
-// 初始化视图
+/**
+ 初始化视图
+ */
 - (instancetype)initWithViewModel:(SSViewModel *)viewModel;
 
-// 在初始化后调用
+/**
+ 在初始化后调用
+ */
 - (void)bindViewModel; // Step1
 - (void)bindNotifications; // Step2
 

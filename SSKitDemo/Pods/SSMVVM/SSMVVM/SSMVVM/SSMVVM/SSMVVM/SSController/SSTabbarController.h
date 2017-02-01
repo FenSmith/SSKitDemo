@@ -11,10 +11,14 @@
 @class SSTabbarViewModel;
 @interface SSTabbarController : UITabBarController
 
-// 初始化视图
+/**
+ 初始化视图
+ */
 - (instancetype)initWithViewModel:(SSTabbarViewModel *)viewModel;
 
-// 初始化后调用的方法
+/**
+ 初始化后调用的方法
+ */
 - (void)bindInitialization; /// Step1
 - (void)bindNotification; /// Step2
 - (void)bindViewModel; /// Step3

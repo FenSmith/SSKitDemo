@@ -7,6 +7,7 @@
 //
 
 #import "SSTableViewCell.h"
+#import "SSViewModel.h"
 
 @implementation SSTableViewCell
 
@@ -17,11 +18,11 @@
     return self;
 }
 
-- (void)bindWithDataSource:(NSObject *)dataSource indexPath:(NSIndexPath *)indexPath {}
+- (void)bindWithDataSource:(NSObject *)dataSource forIndexPath:(NSIndexPath *)indexPath {}
 
-- (void)bindWithViewModel:(SSViewModel *)viewModel indexPath:(NSIndexPath *)indexPath {}
+- (void)bindWithViewModel:(SSViewModel *)viewModel forIndexPath:(NSIndexPath *)indexPath {}
 
-- (void)bindWithViewModel:(SSViewModel *)viewModel dataSource:(NSObject *)dataSource indexPath:(NSIndexPath *)indexPath{};
+- (void)bindWithViewModel:(SSViewModel *)viewModel fetchDataSource:(NSObject *)dataSource forIndexPath:(NSIndexPath *)indexPath {};
 
 + (CGFloat)cellHeightWithModel:(NSObject *)model {return 44;}
 

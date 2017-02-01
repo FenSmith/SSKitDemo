@@ -72,7 +72,7 @@
     return self;
 }
 
-- (void)bindWithDataSource:(DTBVideoModel *)dataSource indexPath:(NSIndexPath *)indexPath {
+- (void)bindWithDataSource:(DTBVideoModel *)dataSource forIndexPath:(NSIndexPath *)indexPath {
     [self.iconView sd_setImageWithURL:[NSURL URLWithString:dataSource.cover] placeholderImage:nil];
     self.titleLabel.text = dataSource.title;
     self.timeLabel.text = [self fetchTimeFromTime:dataSource.createTime];

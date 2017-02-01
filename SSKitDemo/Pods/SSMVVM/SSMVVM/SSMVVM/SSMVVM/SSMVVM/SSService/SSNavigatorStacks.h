@@ -8,8 +8,15 @@
 
 #import <Foundation/Foundation.h>
 #import "SSViewModelService.h"
+#import "SSNavigatorController.h"
 
-@class SSNavigatorController;
+typedef NS_ENUM(NSInteger,SSPageType) {
+    SSPageTypeUnknow = 0,
+    SSPageTypeViewController = 1,
+    SSPageTypeNaviController = 2,
+    SSPageTypeTabbarController = 3,
+};
+
 @interface SSNavigatorStacks : NSObject
 
 - (instancetype)initWithService:(id<SSViewModelService>)service;

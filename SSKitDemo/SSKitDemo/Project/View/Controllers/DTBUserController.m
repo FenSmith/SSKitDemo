@@ -10,6 +10,7 @@
 #import "DTBUserHeaderView.h"
 #import "DTBUserViewModel.h"
 #import "DTBUserPageCell.h"
+#import <TPKeyboardAvoidingTableView.h>
 
 @interface DTBUserController ()
 @property (nonatomic,strong) DTBUserHeaderView *headerView;
@@ -34,7 +35,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     DTBUserPageCell *cell = [tableView dequeueReusableCellWithIdentifier:@"DTBUserPageCell"];
-    [cell bindWithViewModel:self.viewModel dataSource:self.viewModel.dataSource[indexPath.row] indexPath:indexPath];
+    [cell bindWithViewModel:self.viewModel fetchDataSource:self.viewModel.dataSource[indexPath.row] forIndexPath:indexPath];
     return cell;
 }
 

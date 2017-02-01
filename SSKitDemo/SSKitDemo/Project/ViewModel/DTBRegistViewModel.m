@@ -22,9 +22,9 @@
     self.userRegistCommand = [[RACCommand alloc] initWithSignalBlock:^RACSignal *(id input) {
         @strongify(self);
         if (!self.phone || self.phone.length != 11) {
-            [SSDialog showDialogWithType:SSDialogTypeWrong details:@"请输入正确的手机号码"];
+            [SSDialog showDialogWithType:SSDialogTypeWrong forDetail:@"请输入正确的手机号码"];
         } else {
-            [SSPageRouter openProtocol:@"sspage://DTBCaptchaViewModel" viewModelParams:@{@"phone":self.phone}];
+            [SSPageRouter openProtocol:@"sspr://DTBCaptchaViewModel" fetchParams:@{@"phone":self.phone}];
         }
         return [RACSignal empty];
     }];

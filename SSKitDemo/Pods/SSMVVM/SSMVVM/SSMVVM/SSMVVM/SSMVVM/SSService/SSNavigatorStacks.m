@@ -7,11 +7,11 @@
 //
 
 #import "SSNavigatorStacks.h"
-#import "SSNavigatorController.h"
 #import "SSViewController.h"
 #import "SSTabbarController.h"
 #import "SSTabbarViewModel.h"
 #import "SSPageRouter.h"
+#import "SSViewModel.h"
 
 #import <ReactiveCocoa/ReactiveCocoa.h>
 #import <ReactiveCocoa/RACEXTScope.h>
@@ -42,27 +42,27 @@
     self = [super init];
     if (!self) return nil;
     
-    self.service = service;
-    self.navigationControllers = [[NSMutableArray alloc] init];
+    _service = service;
+    _navigationControllers = [[NSMutableArray alloc] init];
     
     return self;
 }
 
 - (void)pushNavigationController:(SSNavigatorController *)navigationController {
-    if ([self.navigationControllers containsObject:navigationController]) {
+    if ([_navigationControllers containsObject:navigationController]) {
         return;
     }
-    [self.navigationControllers addObject:navigationController];
+    [_navigationControllers addObject:navigationController];
 }
 
 - (void)popNavigationController {
-    if (self.navigationControllers.count > 0) {
-        [self.navigationControllers removeLastObject];
+    if (_navigationControllers.count > 0) {
+        [_navigationControllers removeLastObject];
     }
 }
 
 - (SSNavigatorController *)topNavigationController {
-    return self.navigationControllers.lastObject;
+    return _navigationControllers.lastObject;
 }
 
 - (UIWindow *)rootWindow {
@@ -72,83 +72,123 @@
 - (void)registerNavigationHooks {
     
     @weakify(self);
-    [[(NSObject *)self.service
-      rac_signalForSelector:@selector(pushViewModel:animated:)]
-     subscribeNext:^(RACTuple *tuple) {
-         @strongify(self);
-         id ctr = [[SSPageRouter sharedRouter] viewControllerWithViewModel:(SSViewModel *)tuple.first];
-         if (![ctr isKindOfClass:[SSNavigatorController class]]) {
-             [self.navigationControllers.lastObject pushViewController:ctr animated:[tuple.second boolValue]];
-         }
+    [[(NSObject *)self.service rac_signalForSelector:@selector(pushViewModel:animated:)]
+    subscribeNext:^(RACTuple *tuple) {
+        @strongify(self);
+        id vc = [[SSPageRouter sharedRouter] viewControllerForViewModel:tuple.first fetchControllerParams:nil];
+        BOOL isAnimated = [tuple.second boolValue];
+        if (![vc isKindOfClass:[SSNavigatorController class]]) {
+            [[self topNavigationController] pushViewController:vc animated:isAnimated];
+        }
      }];
     
-    [[(NSObject *)self.service
-      rac_signalForSelector:@selector(popViewModelAnimated:)]
+    [[(NSObject *)self.service rac_signalForSelector:@selector(popViewModelAnimated:)]
      subscribeNext:^(RACTuple *tuple) {
          @strongify(self);
-         [self.navigationControllers.lastObject popViewControllerAnimated:[tuple.first boolValue]];
+         BOOL isAnimated = [tuple.first boolValue];
+         [[self topNavigationController] popViewControllerAnimated:isAnimated];
      }];
     
-    [[(NSObject *)self.service
-      rac_signalForSelector:@selector(popToRootViewModelAnimated:)]
+    [[(NSObject *)self.service rac_signalForSelector:@selector(popToRootViewModelAnimated:)]
      subscribeNext:^(RACTuple *tuple) {
          @strongify(self)
-         [self.navigationControllers.lastObject popToRootViewControllerAnimated:[tuple.first boolValue]];
+         BOOL isAnimated = [tuple.first boolValue];
+         [[self topNavigationController] popToRootViewControllerAnimated:isAnimated];
      }];
     
-    [[(NSObject *)self.service
-      rac_signalForSelector:@selector(resetRootViewModel:)]
+    [[(NSObject *)self.service rac_signalForSelector:@selector(resetRootViewModel:)]
      subscribeNext:^(RACTuple *tuple) {
          @strongify(self);
          [self.navigationControllers removeAllObjects];
          
-         id viewModel = tuple.first;
-         id ctr = [[SSPageRouter sharedRouter] viewControllerWithViewModel:viewModel];
-         if ([ctr isKindOfClass:[SSTabbarController class]]) {
-             SSNavigatorController *naviCtr = [[(SSTabbarViewModel *)viewModel viewControllers] firstObject];
-             [self pushNavigationController:naviCtr];
-             [self rootWindow].rootViewController = ctr;
-         } else if ([ctr isKindOfClass:[SSViewController class]]) {
-             SSNavigatorController *naviCtr = [[SSNavigatorController alloc] initWithRootViewController:ctr];
-             [self pushNavigationController:naviCtr];
-             [self rootWindow].rootViewController = naviCtr;
-         } else if ([ctr isKindOfClass:[SSNavigatorController class]]) {
-             [self pushNavigationController:(SSNavigatorController *)ctr];
-             [self rootWindow].rootViewController = ctr;
+         id vm = tuple.first;
+         id vc = [[SSPageRouter sharedRouter] viewControllerForViewModel:vm fetchControllerParams:nil];
+         SSPageType type = [self typeForViewController:vc];
+         SSNavigatorController *nvc = nil;
+         
+         switch (type) {
+             case SSPageTypeUnknow:{
+                 
+             }
+                 break;
+             case SSPageTypeViewController:{
+                 nvc = [[SSNavigatorController alloc] initWithRootViewController:vc];
+             }
+                 break;
+             case SSPageTypeNaviController:{
+                 nvc = vc;
+             }
+                 break;
+             case SSPageTypeTabbarController:{
+                 SSTabbarViewModel *tvm = vm;
+                 nvc = tvm.viewControllers.firstObject;
+             }
+                 break;
+             default:
+                 break;
+         }
+         
+         if (nvc == nil) {
+             nvc = [[SSPageRouter sharedRouter] defaultNavigationController];
+         }
+         
+         [self pushNavigationController:nvc];
+         
+         if (type == SSPageTypeTabbarController) {
+             [self rootWindow].rootViewController = vc;
+         } else {
+             [self rootWindow].rootViewController = nvc;
          }
      }];
     
-    [[(NSObject *)self.service
-      rac_signalForSelector:@selector(presentViewModel:animated:completion:)]
+    [[(NSObject *)self.service rac_signalForSelector:@selector(presentViewModel:animated:completion:)]
      subscribeNext:^(RACTuple *tuple) {
          @strongify(self);
+         id vm = tuple.first;
+         id vc = [[SSPageRouter sharedRouter] viewControllerForViewModel:vm fetchControllerParams:nil];
+         SSPageType type = [self typeForViewController:vc];
+         BOOL isAnimated = [tuple.second boolValue];
+         ssVoidBlock block = [tuple.third copy];
          
-         id viewModel = tuple.first;
-         id ctr = [[SSPageRouter sharedRouter] viewControllerWithViewModel:viewModel];
-         SSNavigatorController *presentCtr = self.navigationControllers.lastObject;
-         BOOL animated = [tuple.second boolValue];
-         
-         if ([ctr isKindOfClass:[SSTabbarController class]]) {
-             SSNavigatorController *naviCtr = [[(SSTabbarViewModel *)viewModel viewControllers] firstObject];
-             [self pushNavigationController:naviCtr];
-             [presentCtr presentViewController:ctr animated:animated completion:tuple.third];
-         } else if ([ctr isKindOfClass:[SSViewController class]]) {
-             SSNavigatorController *naviCtr = [[SSNavigatorController alloc] initWithRootViewController:ctr];
-             [self pushNavigationController:naviCtr];
-             [presentCtr presentViewController:naviCtr animated:animated completion:tuple.third];
-         } else if ([ctr isKindOfClass:[SSNavigatorController class]]) {
-             [self pushNavigationController:(SSNavigatorController *)ctr];
-             [presentCtr presentViewController:ctr animated:animated completion:tuple.third];
+         switch (type) {
+             case SSPageTypeViewController:{
+                 SSNavigatorController *nvc = [[SSNavigatorController alloc] initWithRootViewController:vc];
+                 [self pushNavigationController:nvc];
+                 [[self topNavigationController] presentViewController:nvc animated:isAnimated completion:block];
+             }
+                 break;
+             case SSPageTypeTabbarController:{
+                 SSTabbarViewModel *tvm = vm;
+                 SSNavigatorController *nvc = tvm.viewControllers.firstObject;
+                 [self pushNavigationController:nvc];
+                 [[self topNavigationController] presentViewController:nvc animated:isAnimated completion:block];
+             }
+                 break;
+             default:
+                 break;
          }
      }];
     
-    [[(NSObject *)self.service
-      rac_signalForSelector:@selector(dismissViewModelAnimated:completion:)]
+    [[(NSObject *)self.service rac_signalForSelector:@selector(dismissViewModelAnimated:completion:)]
      subscribeNext:^(RACTuple *tuple) {
          @strongify(self)
-         [self.navigationControllers.lastObject dismissViewControllerAnimated:[tuple.first boolValue] completion:tuple.second];
+         BOOL isAnimated = [tuple.second boolValue];
+         ssVoidBlock block = [tuple.third copy];
+         
+         [[self topNavigationController] dismissViewControllerAnimated:isAnimated completion:block];
          [self popNavigationController];
      }];
+}
+
+- (SSPageType)typeForViewController:(id)viewController {
+    if ([viewController isKindOfClass:[SSTabbarController class]]) {
+        return SSPageTypeTabbarController;
+    } else if ([viewController isKindOfClass:[SSNavigatorController class]]) {
+        return SSPageTypeNaviController;
+    } else if ([viewController isKindOfClass:[SSViewController class]]) {
+        return SSPageTypeViewController;
+    }
+    return SSPageTypeUnknow;
 }
 
 @end

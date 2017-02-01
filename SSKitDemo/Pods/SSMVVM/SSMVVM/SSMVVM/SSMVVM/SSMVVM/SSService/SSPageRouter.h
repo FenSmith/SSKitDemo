@@ -7,87 +7,94 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "SSNavigatorStacks.h"
-#import "SSNavigatorController.h"
-#import "SSViewModelServiceImpl.h"
-#import "SSViewController.h"
+#import <UIKit/UIKit.h>
+#import "SSMVVMBlocks.h"
+#import <ReactiveCocoa/ReactiveCocoa.h>
+
+@class SSNavigatorStacks;
+@class SSNavigatorController;
+@class SSViewModelServiceImpl;
+@class SSViewController;
+@class SSViewModel;
+
+/**
+ SSPR_SCHEME_MARK : 协议标志,所有的跳转、请求协议必须有该协议头
+ SSPR_VIEWMODEL_MARK : ViewModel标志,该标志用于检测是否跳转的是ViewModel还是普通的HTTP
+ SSPR_CONTROLLER_MARK : ViewModel与ViewController需要根据名称映射成具体的实例,该标志用于ViewModel转换成具体的Controller
+ 例如:SSTestViewModel -> SSTestController, 如果SSPR_VIEWMODEL_MARK与SSPR_CONTROLLER_MARK分别为‘ViewModel’与‘Controller’,则会进行替换,并且映射成具体的类
+ 如果SSPR_VIEWMODEL_MARK与SSPR_CONTROLLER_MARK分别为‘ViewModel’与‘ViewController’,当SSTestViewModel转换成SSTestViewController时,由于实际文件名为SSTestController,会无法
+ 映射成具体的类
+ SSPR_TABBAR_MARK : SSTabbarViewModel不是继承自SSViewModel,两个类类似但是没有关系，所有需要根据这个关键字进行区分以映射不同的类
+ */
+static NSString * const SSPR_SCHEME_MARK = @"sspr://";
+static NSString * const SSPR_VIEWMODEL_MARK = @"ViewModel";
+static NSString * const SSPR_CONTROLLER_MARK = @"Controller";
+static NSString * const SSPR_TABBAR_MARK = @"Tabbar";
+
+typedef void (^ SSPageRouterActionBlock)(id params);
 
 typedef NS_ENUM(NSInteger,SSPageRouterType) {
-    SSPageRouterTypeError = 0,
+    SSPageRouterTypeUnknow = 0,
     SSPageRouterTypePage = 1,
     SSPageRouterTypeWebView = 2,
+    SSPageRouterTypeTabbar = 3,
 };
-
-typedef void (^ SSPageRouterCallback)(id params);
 
 @interface SSPageRouter : NSObject
 
 + (SSPageRouter *)sharedRouter;
 
-@property (nonatomic,strong) NSMutableDictionary *pagesMapping;
 @property (nonatomic,strong) SSNavigatorStacks *stacks;
 @property (nonatomic,strong) SSViewModelServiceImpl *serviceImpl;
 
-- (void)registPages:(NSDictionary *)pages;
-- (void)registProtocol:(NSString *)protocol alsoCallback:(SSPageRouterCallback)callback;
+///---------------------------------
+/// 普通方法,相当于NSNotificationCenter
+///---------------------------------
++ (void)callProtocol:(NSString *)protocol;
++ (void)callProtocol:(NSString *)protocol fetchParams:(NSDictionary *)params;
++ (void)responseProtocol:(NSString *)protocol forCallback:(SSPageRouterActionBlock)callback;
++ (void)removeProtocol:(NSString *)protocol;
 
-/**
- 根据协议生成控制器
- 协议中的‘viewModel’需要已经注册
- 协议有对应关系
- 例如 SSIndexViewModel 与 SSIndexController, 如果这两个文件名都已经存在, 则无须注册
- 例如 SSIndexViewModel 需要特殊对应 SSPageController, 则需要注册
- 
- 协议规则
- 1. 打开Page : sspage://indexViewModel
- 2. 打开Web Page : http://www.baidu.com 或者 https://www.baidu.com
- */
+///--------------
+/// 用于基本页面跳转
+///--------------
++ (RACSignal *)openProtocol:(NSString *)aProtocol;
++ (RACSignal *)openProtocol:(NSString *)aProtocol fetchParams:(NSDictionary *)params;
++ (RACSignal *)openProtocol:(NSString *)aProtocol fetchParams:(NSDictionary *)params fetchControllerParams:(NSDictionary *)cParams;
++ (RACSignal *)openProtocol:(NSString *)aProtocol fetchParams:(NSDictionary *)params fetchControllerParams:(NSDictionary *)cParams isAnimated:(BOOL)isAnimated;
 
-+ (void)openCallbackProtocol:(NSString *)protocol attachParams:(id)params;
++ (RACSignal *)presentProtocol:(NSString *)aProtocol;
++ (RACSignal *)presentProtocol:(NSString *)aProtocol fetchParams:(NSDictionary *)params;
++ (RACSignal *)presentProtocol:(NSString *)aProtocol fetchParams:(NSDictionary *)params fetchControllerParams:(NSDictionary *)cParams;
++ (RACSignal *)presentProtocol:(NSString *)aProtocol fetchParams:(NSDictionary *)params fetchControllerParams:(NSDictionary *)cParams fetchVoidBlock:(SSMVVMVoidBlock)block isAnimated:(BOOL)isAnimated;
 
-/**
- protocol:打开的具体协议
- params:viewModel中分配的属性
- ctrParams:viewController中分配的属性
- 默认打开一个viewModle是有动画的 animated = YES
- */
-+ (void)openProtocol:(NSString *)protocol;
-+ (void)openProtocol:(NSString *)protocol viewModelParams:(NSDictionary *)params;
-+ (void)openProtocol:(NSString *)protocol viewModelParams:(NSDictionary *)params ctrParams:(NSDictionary *)ctrParams;
-+ (void)openProtocol:(NSString *)protocol viewModelParams:(NSDictionary *)params ctrParams:(NSDictionary *)ctrParams animated:(BOOL)animated;
++ (void)resetPageAttachProtocol:(NSString *)aProtocol;
++ (void)resetPageAttachProtocol:(NSString *)aProtocol fetchParams:(NSDictionary *)params;
++ (void)resetPageAttachProtocol:(NSString *)aProtocol fetchParams:(NSDictionary *)params fetchControllerParams:(NSDictionary *)cParams;
 
-+ (void)presentProtocol:(NSString *)protocol;
-+ (void)presentProtocol:(NSString *)protocol viewModelParams:(NSDictionary *)params;
-+ (void)presentProtocol:(NSString *)protocol viewModelParams:(NSDictionary *)params ctrParams:(NSDictionary *)ctrParams;
-+ (void)presentProtocol:(NSString *)protocol viewModelParams:(NSDictionary *)params ctrParams:(NSDictionary *)ctrParams animated:(BOOL)animated;
-+ (void)presentProtocol:(NSString *)protocol viewModelParams:(NSDictionary *)params ctrParams:(NSDictionary *)ctrParams animated:(BOOL)animated completeHandler:(void(^)())handler;
++ (void)closePage;
++ (void)closePageWithAnimation;
++ (void)closePageAttachProtocol:(NSString *)aProtocol;
++ (void)closePageAtIndex:(NSInteger)index;
++ (void)closePageAttachVoidBlock:(SSMVVMVoidBlock)block isAnimated:(BOOL)isAnimated;
 
-+ (void)resetPageWithViewModel:(id)viewModel;
-+ (void)resetPageWithProtocol:(NSString *)protocol;
-+ (void)resetPageWithProtocol:(NSString *)protocol viewModelParams:(NSDictionary *)params;
-+ (void)resetPageWithProtocol:(NSString *)protocol viewModelParams:(NSDictionary *)params ctrParams:(NSDictionary *)ctrParams;
++ (void)openViewController:(UIViewController *)controller isAnimated:(BOOL)isAnimated;
++ (void)presentViewController:(UIViewController *)controller fetchVoidBlock:(SSMVVMVoidBlock)block isAnimated:(BOOL)isAnimated;
 
-+ (void)openController:(UIViewController *)controller;
-+ (void)presentController:(UIViewController *)controller;
+///-----------
+/// 类具体的方法
+///-----------
 
-- (id)viewControllerWithViewModel:(SSViewModel *)viewModel;
-- (SSNavigatorController *)navigationControllerWithViewModel:(SSViewModel *)viewModel;
+// 返回可能是SSTabbarViewModel/SSViewModel
+- (id)viewModelForProtocol:(NSString *)aProtocol fetchParams:(NSDictionary *)params;
+- (id)viewControllerForProtocol:(NSString *)aProtocol fetchParams:(NSDictionary *)params fetchControllerParams:(NSDictionary *)cParams;
+- (id)viewControllerForViewModel:(SSViewModel *)viewModel fetchControllerParams:(NSDictionary *)cParams;
+- (SSNavigatorController *)navigationControllerForViewModel:(SSViewModel *)viewModel;
 
-+ (void)pagePop:(BOOL)animated;
-+ (void)pagePopRoot:(BOOL)animated;
-+ (void)pageDismiss:(BOOL)animated alsoCallback:(void (^)())callback;
-
-- (id)viewModelFromProtocol:(NSString *)protocol;
-- (id)viewModelFromProtocol:(NSString *)protocol viewModelParams:(NSDictionary *)params;
-
-@end
-
-
-
-
-@interface SSPageRouterObject : NSObject
-
-@property (nonatomic,copy) SSPageRouterCallback callback;
-+ (SSPageRouterObject *)objectWithCallback:(SSPageRouterCallback)callback;
+///--------
+/// 默认变量
+///--------
+- (SSNavigatorController *)defaultNavigationController;
+- (SSViewController *)defaultViewController;
 
 @end

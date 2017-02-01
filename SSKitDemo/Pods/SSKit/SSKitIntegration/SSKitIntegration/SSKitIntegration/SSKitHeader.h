@@ -12,14 +12,6 @@
 // 基础架构
 #import <SSMVVM/SSMVVM.h>
 #import <SSKitUtility/SSUtilityHeader.h>
-#import <SSCategory/SSCategory.h>
-
-// UI
-#import <SSDialog+SSAdd.h>
-#import <SSAlertView/SSAlertView+SSAdd.h>
-
-#import <SSInherits/SSUnderLineButton.h>
-#import <SSInherits/SSGestureRecognizer.h>
-#import <SSInherits/SSPlaceHolderTextView.h>
+#import <SSWrapper/SSWrapper.h>
 
 #endif /* SSKitHeader_h */

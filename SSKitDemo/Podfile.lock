@@ -27,77 +27,120 @@ PODS:
   - SDWebImage (3.8.2):
     - SDWebImage/Core (= 3.8.2)
   - SDWebImage/Core (3.8.2)
-  - SSAlertView (0.0.1)
-  - SSCategory (0.1.0):
-    - SSCategory/Foundation (= 0.1.0)
-    - SSCategory/UIKit (= 0.1.0)
-  - SSCategory/Foundation (0.1.0)
-  - SSCategory/UIKit (0.1.0):
-    - Masonry
-    - SSCategory/Foundation
-  - SSDialog (1.0.0)
-  - SSInherits (0.0.1)
-  - SSKit (2.0.1):
+  - SSKit (2.1.0):
     - FDFullscreenPopGesture
     - KMNavigationBarTransition
-    - SSAlertView
-    - SSInherits
     - SSKitUtility
     - SSMVVM
-  - SSKitUtility (0.0.1):
-    - AFNetworking (~> 3.1.0)
+    - SSWrapper
+  - SSKitUtility (1.0.0):
     - ReactiveCocoa (~> 2.5)
-    - SSDialog
-    - SSKitUtility/SSKitConfigure (= 0.0.1)
-    - SSKitUtility/SSKitHandler (= 0.0.1)
-    - SSKitUtility/SSKitService (= 0.0.1)
-  - SSKitUtility/SSKitConfigure (0.0.1):
-    - AFNetworking (~> 3.1.0)
+    - SSKitUtility/SSCategory (= 1.0.0)
+    - SSKitUtility/SSKitConfigure (= 1.0.0)
+    - SSKitUtility/SSKitHandler (= 1.0.0)
+    - SSKitUtility/SSKitService (= 1.0.0)
+  - SSKitUtility/SSCategory (1.0.0):
     - ReactiveCocoa (~> 2.5)
-    - SSDialog
-  - SSKitUtility/SSKitHandler (0.0.1):
-    - AFNetworking (~> 3.1.0)
+    - SSKitUtility/SSCategory/Foundation (= 1.0.0)
+    - SSKitUtility/SSCategory/UIKit (= 1.0.0)
+  - SSKitUtility/SSCategory/Foundation (1.0.0):
     - ReactiveCocoa (~> 2.5)
-    - SSDialog
+  - SSKitUtility/SSCategory/UIKit (1.0.0):
+    - Masonry
+    - ReactiveCocoa (~> 2.5)
+    - SSKitUtility/SSCategory/Foundation
+  - SSKitUtility/SSKitConfigure (1.0.0):
+    - ReactiveCocoa (~> 2.5)
+  - SSKitUtility/SSKitHandler (1.0.0):
+    - ReactiveCocoa (~> 2.5)
     - SSKitUtility/SSKitConfigure
-  - SSKitUtility/SSKitService (0.0.1):
+    - SSWrapper
+  - SSKitUtility/SSKitService (1.0.0):
     - AFNetworking (~> 3.1.0)
     - ReactiveCocoa (~> 2.5)
-    - SSDialog
     - SSKitUtility/SSKitHandler
-  - SSMVVM (1.0.0):
+  - SSMVVM (1.1.2):
     - AFNetworking (~> 3.1.0)
     - Masonry (~> 1.0.1)
     - ReactiveCocoa (~> 2.5)
     - SDWebImage (~> 3.8.2)
-    - SSCategory
-    - SSDialog
     - SSKitUtility
-    - SSMVVM/SSMVVM (= 1.0.0)
-    - SSProgressIndicator
-    - SSPullRefresh
-    - SSStatus
-    - SSTabbar
+    - SSMVVM/SSMVVM (= 1.1.2)
+    - SSWrapper
     - TPKeyboardAvoiding (~> 1.3)
-  - SSMVVM/SSMVVM (1.0.0):
+  - SSMVVM/SSMVVM (1.1.2):
     - AFNetworking (~> 3.1.0)
     - Masonry (~> 1.0.1)
     - ReactiveCocoa (~> 2.5)
     - SDWebImage (~> 3.8.2)
-    - SSCategory
-    - SSDialog
     - SSKitUtility
-    - SSProgressIndicator
-    - SSPullRefresh
-    - SSStatus
-    - SSTabbar
+    - SSWrapper
     - TPKeyboardAvoiding (~> 1.3)
-  - SSProgressIndicator (0.0.1)
-  - SSPullRefresh (0.0.1):
-    - Masonry
-  - SSStatus (0.0.2):
-    - Masonry
-  - SSTabbar (0.0.1)
+  - SSWrapper (1.0.1):
+    - Masonry (~> 1.0.1)
+    - SDWebImage (~> 3.8.2)
+    - SSWrapper/SSAlertView (= 1.0.1)
+    - SSWrapper/SSDialog (= 1.0.1)
+    - SSWrapper/SSInheritView (= 1.0.1)
+    - SSWrapper/SSPageControl (= 1.0.1)
+    - SSWrapper/SSProgressView (= 1.0.1)
+    - SSWrapper/SSPullRefresh (= 1.0.1)
+    - SSWrapper/SSStatus (= 1.0.1)
+    - SSWrapper/SSTabbar (= 1.0.1)
+  - SSWrapper/SSAlertView (1.0.1):
+    - Masonry (~> 1.0.1)
+    - SDWebImage (~> 3.8.2)
+  - SSWrapper/SSDialog (1.0.1):
+    - Masonry (~> 1.0.1)
+    - SDWebImage (~> 3.8.2)
+  - SSWrapper/SSInheritView (1.0.1):
+    - Masonry (~> 1.0.1)
+    - SDWebImage (~> 3.8.2)
+  - SSWrapper/SSPageControl (1.0.1):
+    - Masonry (~> 1.0.1)
+    - SDWebImage (~> 3.8.2)
+  - SSWrapper/SSProgressView (1.0.1):
+    - Masonry (~> 1.0.1)
+    - SDWebImage (~> 3.8.2)
+  - SSWrapper/SSPullRefresh (1.0.1):
+    - Masonry (~> 1.0.1)
+    - SDWebImage (~> 3.8.2)
+    - SSWrapper/SSPullRefresh/Base (= 1.0.1)
+    - SSWrapper/SSPullRefresh/Category (= 1.0.1)
+    - SSWrapper/SSPullRefresh/Custom (= 1.0.1)
+  - SSWrapper/SSPullRefresh/Base (1.0.1):
+    - Masonry (~> 1.0.1)
+    - SDWebImage (~> 3.8.2)
+  - SSWrapper/SSPullRefresh/Category (1.0.1):
+    - Masonry (~> 1.0.1)
+    - SDWebImage (~> 3.8.2)
+    - SSWrapper/SSPullRefresh/Base
+    - SSWrapper/SSPullRefresh/Custom
+  - SSWrapper/SSPullRefresh/Custom (1.0.1):
+    - Masonry (~> 1.0.1)
+    - SDWebImage (~> 3.8.2)
+    - SSWrapper/SSPullRefresh/Base
+  - SSWrapper/SSStatus (1.0.1):
+    - Masonry (~> 1.0.1)
+    - SDWebImage (~> 3.8.2)
+    - SSWrapper/SSStatus/Base (= 1.0.1)
+    - SSWrapper/SSStatus/Category (= 1.0.1)
+    - SSWrapper/SSStatus/Custom (= 1.0.1)
+  - SSWrapper/SSStatus/Base (1.0.1):
+    - Masonry (~> 1.0.1)
+    - SDWebImage (~> 3.8.2)
+  - SSWrapper/SSStatus/Category (1.0.1):
+    - Masonry (~> 1.0.1)
+    - SDWebImage (~> 3.8.2)
+    - SSWrapper/SSStatus/Base
+    - SSWrapper/SSStatus/Custom
+  - SSWrapper/SSStatus/Custom (1.0.1):
+    - Masonry (~> 1.0.1)
+    - SDWebImage (~> 3.8.2)
+    - SSWrapper/SSStatus/Base
+  - SSWrapper/SSTabbar (1.0.1):
+    - Masonry (~> 1.0.1)
+    - SDWebImage (~> 3.8.2)
   - TPKeyboardAvoiding (1.3.1)
   - YYModel (1.0.4)
 
@@ -112,20 +155,13 @@ SPEC CHECKSUMS:
   Masonry: 7c429b56da9d4ee0bbb3ed77a5ea710d6a5df39e
   ReactiveCocoa: e2db045570aa97c695e7aa97c2bcab222ae51f4a
   SDWebImage: 098e97e6176540799c27e804c96653ee0833d13c
-  SSAlertView: f9f8e8eb5b0cc2d6bfbdb697b85551850c92cec2
-  SSCategory: baefbae90c79bedfc65b70a839d4dc5db33f06ab
-  SSDialog: 7c2c36f6c7ef79db57dcaf99c2e48246b7496283
-  SSInherits: 9a3e4c6f2606b27757005473faa63cfe762ded43
-  SSKit: f85f02533c1c1d18228fd4d2dc5277ed58782069
-  SSKitUtility: 6b1793e8f2e312dcc707ff58ad572b00cb0c59cb
-  SSMVVM: 3dda0caba3852cdcf8f878bb3c8c3cb78135357f
-  SSProgressIndicator: 83e75523a31389728dc64faf3b024c749ac39672
-  SSPullRefresh: daad36d7f0ba2ea3dd3eab09db2709207b3ad8ad
-  SSStatus: e8b4368d0279cfcce9b00a889790a4dc362019f9
-  SSTabbar: 7a5870008c420a2183118e406152eb2464a8668d
+  SSKit: d99d40ddecfca6726439bf6de8259d27934f7144
+  SSKitUtility: b87d9ffe84263328058413c4fe210f0be66a5f88
+  SSMVVM: b9ae00c9454e56ab7c44e2e997e659d4781805c5
+  SSWrapper: bda4a8bcbcea1f55f15dd7b29e67c1f4f9a4ff12
   TPKeyboardAvoiding: 0d6af20e95e2850f4c621841225b59ec7d8dd852
   YYModel: 2a7fdd96aaa4b86a824e26d0c517de8928c04b30
 
 PODFILE CHECKSUM: 9713c88f15335bd4dac782987ed3a82e7cb30bd5
 
-COCOAPODS: 1.2.0.rc.1
+COCOAPODS: 1.1.1

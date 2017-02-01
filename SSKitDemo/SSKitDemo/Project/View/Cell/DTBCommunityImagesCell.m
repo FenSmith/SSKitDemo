@@ -56,8 +56,8 @@ static CGFloat const DTBCommunityImagePadding = 15;
     return self;
 }
 
-- (void)bindWithDataSource:(DTBCommunityModel *)dataSource indexPath:(NSIndexPath *)indexPath {
-    [super bindWithDataSource:dataSource indexPath:indexPath];
+- (void)bindWithDataSource:(DTBCommunityModel *)dataSource forIndexPath:(NSIndexPath *)indexPath {
+    [super bindWithDataSource:dataSource forIndexPath:indexPath];
     
     self.headlineLabel.text = dataSource.title;
     [self.firstImageView sd_setImageWithURL:[NSURL URLWithString:dataSource.images.firstObject[@"url"]] placeholderImage:nil];

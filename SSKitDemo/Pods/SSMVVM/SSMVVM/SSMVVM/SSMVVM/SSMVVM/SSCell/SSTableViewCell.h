@@ -7,22 +7,28 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "SSViewModel.h"
 
-typedef void (^ TextCallback)(NSString *str);
-
+@class SSViewModel;
 @interface SSTableViewCell : UITableViewCell
 
-// 绑定模型
-- (void)bindWithDataSource:(NSObject *)dataSource indexPath:(NSIndexPath *)indexPath;
+/**
+ 绑定模型
+ */
+- (void)bindWithDataSource:(NSObject *)dataSource forIndexPath:(NSIndexPath *)indexPath;
 
-// 绑定‘ViewModel‘
-- (void)bindWithViewModel:(SSViewModel *)viewModel indexPath:(NSIndexPath *)indexPath;
+/**
+ 绑定‘ViewModel‘
+ */
+- (void)bindWithViewModel:(SSViewModel *)viewModel forIndexPath:(NSIndexPath *)indexPath;
 
-// 绑定‘ViewModel‘以及赋值
-- (void)bindWithViewModel:(SSViewModel *)viewModel dataSource:(NSObject *)dataSource indexPath:(NSIndexPath *)indexPath;
+/**
+ 绑定‘ViewModel‘以及赋值
+ */
+- (void)bindWithViewModel:(SSViewModel *)viewModel fetchDataSource:(NSObject *)dataSource forIndexPath:(NSIndexPath *)indexPath;
 
-// 计算高度
+/**
+ 计算高度
+ */
 + (CGFloat)cellHeightWithModel:(NSObject *)model;
 
 @end

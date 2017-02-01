@@ -10,13 +10,17 @@
 #import "SSHTTPViewModel.h"
 #import "SSTabbarController.h"
 #import "SSTabbarViewModel.h"
+#import "SSNavigatorStacks.h"
+#import "SSNavigatorController.h"
+#import "SSViewModelServiceImpl.h"
+#import "SSViewController.h"
+#import <CommonCrypto/CommonDigest.h>
+#import <SSKitUtility/NSObject+Property.h>
 
-#import <SSCategory/NSObject+Property.h>
+@interface SSPageRouter()
+@property (nonatomic,strong) NSMutableDictionary *pagesMapping;
 
-static NSString * const SSPageRouterProtocolIdentity = @"sspage://";
-static NSString * const SSPageRouterViewModelIdentity = @"ViewModel";
-static NSString * const SSPageRouterControllerIdentity = @"Controller";
-static NSString * const SSPageRouterTabbarIdentity = @"tabbar";
+@end
 
 @implementation SSPageRouter
 
@@ -35,219 +39,319 @@ static NSString * const SSPageRouterTabbarIdentity = @"tabbar";
     
     _serviceImpl = [[SSViewModelServiceImpl alloc] init];
     _stacks = [[SSNavigatorStacks alloc] initWithService:_serviceImpl];
-    
-    self.pagesMapping = [[NSMutableDictionary alloc] init];
+    _pagesMapping = [[NSMutableDictionary alloc] init];
     
     return self;
 }
 
-- (void)registPages:(NSDictionary *)pages {
-    if (!pages) return;
-    for (NSString *key in pages.allKeys) {
-        id object = [pages objectForKey:key];
-        if (object) {
-            [self.pagesMapping setObject:object forKey:key];
-        }
-    }
++ (void)callProtocol:(NSString *)protocol {
+    [self callProtocol:protocol fetchParams:nil];
 }
 
-- (void)registProtocol:(NSString *)protocol alsoCallback:(SSPageRouterCallback)callback {
-    if (!protocol) return;
-    [self.pagesMapping setObject:[SSPageRouterObject objectWithCallback:callback] forKey:protocol];
++ (void)callProtocol:(NSString *)protocol fetchParams:(NSDictionary *)params {
+    [[SSPageRouter sharedRouter] callProtocol:protocol fetchParams:params];
 }
 
-- (void)openCallbackProtocol:(NSString *)protocol attachParams:(id)params {
-    if (!protocol) return;
-    if ([self.pagesMapping.allKeys containsObject:protocol]) {
-        SSPageRouterObject *object = [self.pagesMapping objectForKey:protocol];
-        if (object.callback) {
-            object.callback(params);
-        }
-    }
++ (void)removeProtocol:(NSString *)protocol {
+    [[SSPageRouter sharedRouter] removeProtocol:protocol];
 }
 
-+ (void)openCallbackProtocol:(NSString *)protocol attachParams:(id)params {
-    [[SSPageRouter sharedRouter] openCallbackProtocol:protocol attachParams:params];
++ (void)responseProtocol:(NSString *)protocol forCallback:(SSPageRouterActionBlock)callback {
+    [[SSPageRouter sharedRouter] responseProtocol:protocol forCallback:callback];
 }
 
-+ (void)openProtocol:(NSString *)protocol {
-    [self openProtocol:protocol viewModelParams:nil];
-}
-
-+ (void)openProtocol:(NSString *)protocol viewModelParams:(NSDictionary *)params {
-    [self openProtocol:protocol viewModelParams:params ctrParams:nil];
-}
-
-+ (void)openProtocol:(NSString *)protocol viewModelParams:(NSDictionary *)params ctrParams:(NSDictionary *)ctrParams {
-    [self openProtocol:protocol viewModelParams:params ctrParams:ctrParams animated:YES];
-}
-
-+ (void)openProtocol:(NSString *)protocol viewModelParams:(NSDictionary *)params ctrParams:(NSDictionary *)ctrParams animated:(BOOL)animated {
-    [[SSPageRouter sharedRouter] openProtocol:protocol viewModelParams:params ctrPamams:ctrParams animated:animated showType:SSPageRouterShowTypePush completeHandler:nil];
-}
-
-+ (void)presentProtocol:(NSString *)protocol {
-    [self presentProtocol:protocol viewModelParams:nil];
-}
-
-+ (void)presentProtocol:(NSString *)protocol viewModelParams:(NSDictionary *)params {
-    [self presentProtocol:protocol viewModelParams:params ctrParams:nil];
-}
-
-+ (void)presentProtocol:(NSString *)protocol viewModelParams:(NSDictionary *)params ctrParams:(NSDictionary *)ctrParams {
-    [self presentProtocol:protocol viewModelParams:params ctrParams:ctrParams animated:YES];
-}
-
-+ (void)presentProtocol:(NSString *)protocol viewModelParams:(NSDictionary *)params ctrParams:(NSDictionary *)ctrParams animated:(BOOL)animated {
-    [self presentProtocol:protocol viewModelParams:params ctrParams:ctrParams animated:animated completeHandler:nil];
-}
-
-+ (void)presentProtocol:(NSString *)protocol viewModelParams:(NSDictionary *)params ctrParams:(NSDictionary *)ctrParams animated:(BOOL)animated completeHandler:(void (^)())handler {
-    [[SSPageRouter sharedRouter] openProtocol:protocol viewModelParams:params ctrPamams:ctrParams animated:animated showType:SSPageRouterShowTypePresent completeHandler:handler];
-}
-
-+ (void)resetPageWithProtocol:(NSString *)protocol {
-    [self resetPageWithProtocol:protocol viewModelParams:nil];
-}
-
-+ (void)resetPageWithProtocol:(NSString *)protocol viewModelParams:(NSDictionary *)params {
-    [self resetPageWithProtocol:protocol viewModelParams:params ctrParams:nil];
-}
-
-+ (void)resetPageWithProtocol:(NSString *)protocol viewModelParams:(NSDictionary *)params ctrParams:(NSDictionary *)ctrParams {
-    [[SSPageRouter sharedRouter] openProtocol:protocol viewModelParams:params ctrPamams:ctrParams animated:NO showType:SSPageRouterShowTypeReset completeHandler:nil];
-}
-
-+ (void)resetPageWithViewModel:(id)viewModel {
-    [[SSPageRouter sharedRouter] filterWithViewModel:viewModel alsoAnimated:YES alsoShowType:SSPageRouterShowTypeReset alsoCompleteHandler:nil];
-}
-
-+ (void)openController:(UIViewController *)controller {
-    [[SSPageRouter sharedRouter].stacks.topNavigationController pushViewController:controller animated:YES];
-}
-
-+ (void)presentController:(UIViewController *)controller {
-    [[SSPageRouter sharedRouter].stacks.topNavigationController presentViewController:controller animated:YES completion:nil];
-}
-
-+ (void)pagePop:(BOOL)animated {
-    [[SSPageRouter sharedRouter].serviceImpl popViewModelAnimated:animated];
-}
-
-+ (void)pagePopRoot:(BOOL)animated {
-    [[SSPageRouter sharedRouter].serviceImpl popToRootViewModelAnimated:animated];
-}
-
-+ (void)pageDismiss:(BOOL)animated alsoCallback:(void (^)())callback {
-    [[SSPageRouter sharedRouter].serviceImpl dismissViewModelAnimated:animated completion:callback];
-}
-
-- (void)openProtocol:(NSString *)protocol viewModelParams:(NSDictionary *)params ctrPamams:(NSDictionary *)ctrParams animated:(BOOL)animated showType:(SSPageRouterShowType)showType completeHandler:(void (^)())handler {
-    NSAssert(protocol != nil, @"SSPageRouter - protocol can not be nil !");
+- (void)callProtocol:(NSString *)protocol fetchParams:(NSDictionary *)params {
+    if (![self _isProtocolValid:protocol]) return;
     
-    id object = [self viewModelFromProtocol:protocol viewModelParams:params];
-    if ([object isKindOfClass:[SSViewModel class]]) {
-        SSViewModel *viewModel = (SSViewModel *)object;
-        viewModel.showType = showType;
-        viewModel.params = ctrParams;
-        [self filterWithViewModel:viewModel alsoAnimated:animated alsoShowType:showType alsoCompleteHandler:handler];
-    } else if ([object isKindOfClass:[SSTabbarViewModel class]]) {
-        SSTabbarViewModel *viewModel = (SSTabbarViewModel *)object;
-        viewModel.showType = showType;
-        viewModel.params = ctrParams;
-        [self filterWithViewModel:viewModel alsoAnimated:animated alsoShowType:showType alsoCompleteHandler:handler];
-    } else {
-        NSLog(@"SSPageRouter can not initialize a viewModel by protocol : %@",protocol);
-    }
-}
-
-- (id)viewModelFromProtocol:(NSString *)protocol {
-    return [self viewModelFromProtocol:protocol viewModelParams:nil];
-}
-
-- (id)viewModelFromProtocol:(NSString *)protocol viewModelParams:(NSDictionary *)params {
-    if ([protocol containsString:SSPageRouterProtocolIdentity]) {
-        NSString *str = [protocol substringFromIndex:SSPageRouterProtocolIdentity.length];
-        if ([str containsString:SSPageRouterViewModelIdentity]) {
-            id viewModel;
-            if (params && params.allKeys.count > 0) {
-                viewModel = [[NSClassFromString(str) alloc] initWithService:self.serviceImpl alsoViewModleParams:params];
-            } else {
-                viewModel = [[NSClassFromString(str) alloc] initWithService:self.serviceImpl];
-            }
-            return viewModel;
-        }
-    } else if ([protocol containsString:@"http://"] || [protocol containsString:@"https://"]) {
-        SSHTTPViewModel *viewModel;
-        if (params && params.allKeys.count > 0) {
-            viewModel = [[SSHTTPViewModel alloc] initWithService:self.serviceImpl alsoViewModleParams:params];
-        } else {
-            viewModel = [[SSHTTPViewModel alloc] initWithService:self.serviceImpl];
-        }
-        viewModel.HTTPUrl = protocol;
-        return viewModel;
-    }
-    return nil;
-}
-
-- (void)filterWithViewModel:(id)viewModel alsoAnimated:(BOOL)animated alsoShowType:(SSPageRouterShowType)showType alsoCompleteHandler:(void(^)())completeHandler{
-    switch (showType) {
-        case SSPageRouterShowTypePush:{
-            [self.serviceImpl pushViewModel:viewModel animated:animated];
-        }
-            break;
-        case SSPageRouterShowTypePresent:{
-            [self.serviceImpl presentViewModel:viewModel animated:animated completion:completeHandler];
-        }
-            break;
-        case SSPageRouterShowTypeReset:{
-            [self.serviceImpl resetRootViewModel:viewModel];
-        }
-            break;
-            
-        default:
-            break;
-    }
-}
-
-- (id)viewControllerWithViewModel:(id)viewModel {
-    if (!viewModel) return nil;
+    NSString *key = [self encodeProtocol:protocol];
+    BOOL isRegisted = [self _isKeyRegisted:key];
+    if (!isRegisted) return;
     
-    NSString *className = NSStringFromClass([viewModel class]);
-    NSString *ctrName = [className stringByReplacingOccurrencesOfString:SSPageRouterViewModelIdentity withString:SSPageRouterControllerIdentity];
-    if ([self.pagesMapping.allKeys containsObject:className]) {
-        ctrName = [self.pagesMapping objectForKey:className];
+    SSPageRouterActionBlock callback = [_pagesMapping objectForKey:key];
+    if (callback) {
+        callback(params);
+    }
+}
+
+- (void)removeProtocol:(NSString *)protocol {
+    if (![self _isProtocolValid:protocol]) return;
+    
+    NSString *key = [self encodeProtocol:protocol];
+    BOOL isRegisted = [self _isKeyRegisted:key];
+    if (!isRegisted) return;
+    
+    @synchronized (self) {
+        [_pagesMapping removeObjectForKey:key];
+    }
+}
+
+- (void)responseProtocol:(NSString *)protocol forCallback:(SSPageRouterActionBlock)callback {
+    if (![self _isProtocolValid:protocol]) return;
+    if (!callback) return;
+    
+    @synchronized (self) {
+        NSString *key = [self encodeProtocol:protocol];
+        [_pagesMapping setObject:[callback copy] forKey:key];
+    }
+}
+
+- (BOOL)_isProtocolValid:(NSString *)protocol {
+    if (!protocol || protocol.length == 0) return NO;
+    if (![self _isProtocolContainsScheme:protocol]) return NO;
+    return YES;
+}
+
+- (BOOL)_isProtocolContainsScheme:(NSString *)protocol {
+    return [protocol hasPrefix:SSPR_SCHEME_MARK];
+}
+
+- (BOOL)_isProtocolRegisted:(NSString *)protocol {
+    NSString *key = [self encodeProtocol:protocol];
+    return [self _isKeyRegisted:key];
+}
+
+- (BOOL)_isKeyRegisted:(NSString *)key {
+    if (!key || key.length == 0) return NO;
+    return [_pagesMapping.allKeys containsObject:key];
+}
+
+- (NSString *)encodeProtocol:(NSString *)protocol {
+    const char *str = [protocol UTF8String];
+    if (str == NULL) {
+        str = "";
+    }
+    unsigned char r[CC_MD5_DIGEST_LENGTH];
+    CC_MD5(str, (CC_LONG)strlen(str), r);
+    NSString *name = [NSString stringWithFormat:@"%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%@",
+                      r[0], r[1], r[2], r[3], r[4], r[5], r[6], r[7], r[8], r[9], r[10],
+                      r[11], r[12], r[13], r[14], r[15], [[protocol pathExtension] isEqualToString:@""] ? @"" : [NSString stringWithFormat:@".%@", [protocol pathExtension]]];
+    
+    return name;
+}
+
+// open
++ (RACSignal *)openProtocol:(NSString *)aProtocol {
+    return [SSPageRouter openProtocol:aProtocol fetchParams:nil];
+}
+
++ (RACSignal *)openProtocol:(NSString *)aProtocol fetchParams:(NSDictionary *)params {
+    return [SSPageRouter openProtocol:aProtocol fetchParams:params fetchControllerParams:nil];
+}
+
++ (RACSignal *)openProtocol:(NSString *)aProtocol fetchParams:(NSDictionary *)params fetchControllerParams:(NSDictionary *)cParams {
+    return [SSPageRouter openProtocol:aProtocol fetchParams:params fetchControllerParams:cParams isAnimated:YES];
+}
+
++ (RACSignal *)openProtocol:(NSString *)aProtocol fetchParams:(NSDictionary *)params fetchControllerParams:(NSDictionary *)cParams isAnimated:(BOOL)isAnimated {
+    return [[SSPageRouter sharedRouter] openProtocol:aProtocol fetchParams:params fetchControllerParams:cParams isAnimated:isAnimated];
+}
+
+// present
++ (RACSignal *)presentProtocol:(NSString *)aProtocol {
+    return [SSPageRouter presentProtocol:aProtocol fetchParams:nil];
+}
+
++ (RACSignal *)presentProtocol:(NSString *)aProtocol fetchParams:(NSDictionary *)params {
+    return [SSPageRouter presentProtocol:aProtocol fetchParams:params fetchControllerParams:nil];
+}
+
++ (RACSignal *)presentProtocol:(NSString *)aProtocol fetchParams:(NSDictionary *)params fetchControllerParams:(NSDictionary *)cParams {
+    return [SSPageRouter presentProtocol:aProtocol fetchParams:params fetchControllerParams:cParams fetchVoidBlock:nil isAnimated:YES];
+}
+
++ (RACSignal *)presentProtocol:(NSString *)aProtocol fetchParams:(NSDictionary *)params fetchControllerParams:(NSDictionary *)cParams fetchVoidBlock:(SSMVVMVoidBlock)block isAnimated:(BOOL)isAnimated {
+    return [[SSPageRouter sharedRouter] presentProtocol:aProtocol fetchParams:params fetchControllerParams:cParams fetchVoidBlock:block isAnimated:isAnimated];
+}
+
+// reset
++ (void)resetPageAttachProtocol:(NSString *)aProtocol {
+    [SSPageRouter resetPageAttachProtocol:aProtocol fetchParams:nil];
+}
+
++ (void)resetPageAttachProtocol:(NSString *)aProtocol fetchParams:(NSDictionary *)params {
+    [SSPageRouter resetPageAttachProtocol:aProtocol fetchParams:params fetchControllerParams:nil];
+}
+
++ (void)resetPageAttachProtocol:(NSString *)aProtocol fetchParams:(NSDictionary *)params fetchControllerParams:(NSDictionary *)cParams {
+    [[SSPageRouter sharedRouter] resetPageAttachProtocol:aProtocol fetchParams:params fetchControllerParams:cParams];
+}
+
+// close
++ (void)closePage {
+    [[SSPageRouter sharedRouter] closePageAtIndex:MAXFLOAT fetchVoidBlock:nil isAnimated:NO];
+}
+
++ (void)closePageWithAnimation {
+    [[SSPageRouter sharedRouter] closePageAtIndex:MAXFLOAT fetchVoidBlock:nil isAnimated:YES];
+}
+
++ (void)closePageAtIndex:(NSInteger)index {
+    [[SSPageRouter sharedRouter] closePageAtIndex:index fetchVoidBlock:nil isAnimated:NO];
+}
+
++ (void)closePageAttachProtocol:(NSString *)aProtocol {
+    [[SSPageRouter sharedRouter] closePageAttachProtocol:aProtocol];
+}
+
++ (void)closePageAttachVoidBlock:(SSMVVMVoidBlock)block isAnimated:(BOOL)isAnimated {
+    [[SSPageRouter sharedRouter] closePageAtIndex:MAXFLOAT fetchVoidBlock:block isAnimated:isAnimated];
+}
+
+- (void)closePageAtIndex:(NSInteger)index fetchVoidBlock:(SSMVVMVoidBlock)block isAnimated:(BOOL)isAnimated {
+    NSInteger count = _stacks.topNavigationController.viewControllers.count;
+    if (count < index && index < 100) return;
+    
+    if (block) {
+        [_serviceImpl dismissViewModelAnimated:isAnimated completion:block];
+        return;
     }
     
-    id ctr = [[NSClassFromString(ctrName) alloc] initWithViewModel:viewModel];
-    if ([ctr isKindOfClass:[SSTabbarController class]]) {
-        return [ctr objAllocateValues:[(SSTabbarViewModel *)viewModel params]];
-    } else if ([ctr isKindOfClass:[SSViewController class]]) {
-        return [ctr objAllocateValues:[(SSViewModel *)viewModel params]];
+    if (index > 100 || index == count - 1) {
+        [_stacks.topNavigationController popViewControllerAnimated:isAnimated];
+        return;
     }
     
-    return nil;
-}
-
-- (SSNavigatorController *)navigationControllerWithViewModel:(SSViewModel *)viewModel {
-    SSViewController *ctr = [self viewControllerWithViewModel:viewModel];
-    if (ctr) {
-        return [[SSNavigatorController alloc] initWithRootViewController:ctr];
+    if (index != count - 1) {
+        NSMutableArray *vcs = [[_stacks.topNavigationController viewControllers] mutableCopy];
+        [vcs removeObjectAtIndex:index];
+        _stacks.topNavigationController.viewControllers = [vcs copy];
+        return;
     }
-    return nil;
 }
 
-@end
+- (void)closePageAttachProtocol:(NSString *)aProtocol {
+    SSViewController *vc = [self viewControllerForProtocol:aProtocol fetchParams:nil fetchControllerParams:nil];
+    NSArray *vcs = _stacks.topNavigationController.viewControllers;
+    Class class = vc.class;
+    
+    for (UIViewController *vct in vcs) {
+        if ([vct isKindOfClass:class]) {
+            NSInteger index = [vcs indexOfObject:vct];
+            [self closePageAtIndex:index fetchVoidBlock:nil isAnimated:YES];
+            break;
+        }
+    }
+}
 
+- (RACSignal *)openProtocol:(NSString *)aProtocol fetchParams:(NSDictionary *)params fetchControllerParams:(NSDictionary *)cParams isAnimated:(BOOL)isAnimated {
+    SSViewModel *vm = [self viewModelForProtocol:aProtocol fetchParams:params];
+    if (vm) {
+        vm.showType = SSPageRouterShowTypePush;
+        vm.params4ctr = cParams;
+        [_serviceImpl pushViewModel:vm animated:isAnimated];
+    }
+    return [RACSignal empty];
+}
 
+- (RACSignal *)presentProtocol:(NSString *)aProtocol fetchParams:(NSDictionary *)params fetchControllerParams:(NSDictionary *)cParams fetchVoidBlock:(SSMVVMVoidBlock)block isAnimated:(BOOL)isAnimated {
+    SSViewModel *vm = [self viewModelForProtocol:aProtocol fetchParams:params];
+    if (vm) {
+        vm.showType = SSPageRouterShowTypePresent;
+        vm.params4ctr = cParams;
+        [_serviceImpl presentViewModel:vm animated:isAnimated completion:block];
+    }
+    return [RACSignal empty];
+}
 
+- (void)resetPageAttachProtocol:(NSString *)aProtocol fetchParams:(NSDictionary *)params fetchControllerParams:(NSDictionary *)cParams {
+    SSViewModel *vm = [self viewModelForProtocol:aProtocol fetchParams:params];
+    if (vm) {
+        vm.showType = SSPageRouterShowTypeReset;
+        vm.params4ctr = cParams;
+        [_serviceImpl resetRootViewModel:vm];
+    }
+}
 
-@implementation SSPageRouterObject
+- (id)viewModelForProtocol:(NSString *)aProtocol fetchParams:(NSDictionary *)params {
+    if (![self isProtocolValid:aProtocol]) return nil;
+    
+    NSString *vm = [aProtocol substringFromIndex:SSPR_SCHEME_MARK.length];
+    SSPageRouterType type = [self typeForProtocol:aProtocol];
+    if (type == SSPageRouterTypeUnknow) return nil;
+    
+    Class class = NSClassFromString(vm);
+    if (type == SSPageRouterTypeWebView) {
+        class = [SSHTTPViewModel class];
+    }
 
-+ (SSPageRouterObject *)objectWithCallback:(SSPageRouterCallback)callback {
-    SSPageRouterObject *object = [[SSPageRouterObject alloc] init];
-    object.callback = callback;
-    return object;
+    return [[class alloc] initWithService:_serviceImpl fetchParams:params];
+}
+
+- (id)viewControllerForProtocol:(NSString *)aProtocol fetchParams:(NSDictionary *)params fetchControllerParams:(NSDictionary *)cParams {
+    if (![self isProtocolValid:aProtocol]) return [self defaultViewController];
+    
+    id viewModel = [self viewModelForProtocol:aProtocol fetchParams:params];
+    if (!viewModel) return [self defaultViewController];
+    
+    return [self viewControllerForViewModel:viewModel fetchControllerParams:cParams];
+}
+
+- (id)viewControllerForViewModel:(id)viewModel fetchControllerParams:(NSDictionary *)cParams {
+    if (!viewModel) return [self defaultViewController];
+    
+    NSString *vm = NSStringFromClass([viewModel class]);
+    NSString *vm2 = [vm stringByReplacingOccurrencesOfString:SSPR_VIEWMODEL_MARK withString:SSPR_CONTROLLER_MARK];
+    
+    id controller = [[NSClassFromString(vm2) alloc] initWithViewModel:viewModel];
+    if (!controller) return [self defaultViewController];
+    
+    [controller objAllocateValues:cParams];
+    return controller;
+}
+
++ (void)openViewController:(UIViewController *)controller isAnimated:(BOOL)isAnimated {
+    [[SSPageRouter sharedRouter].stacks.topNavigationController pushViewController:controller animated:isAnimated];
+}
+
++ (void)presentViewController:(UIViewController *)controller fetchVoidBlock:(SSMVVMVoidBlock)block isAnimated:(BOOL)isAnimated {
+    [[SSPageRouter sharedRouter].stacks.topNavigationController presentViewController:controller animated:isAnimated completion:block];
+}
+
+- (SSNavigatorController *)navigationControllerForViewModel:(SSViewModel *)viewModel {
+    if (!viewModel) return [self defaultNavigationController];
+    
+    SSViewController *vc = [self viewControllerForViewModel:viewModel fetchControllerParams:nil];
+    if (!vc) return [self defaultNavigationController];
+    return [[SSNavigatorController alloc] initWithRootViewController:vc];
+}
+
+- (SSNavigatorController *)defaultNavigationController {
+    return [[SSNavigatorController alloc] initWithRootViewController:[self defaultViewController]];
+}
+
+- (SSViewController *)defaultViewController {
+    return [self viewControllerForProtocol:[NSString stringWithFormat:@"%@SSViewModel",SSPR_SCHEME_MARK] fetchParams:nil fetchControllerParams:nil];
+}
+
+- (SSPageRouterType)typeForProtocol:(NSString *)aProtocol {
+    if (!aProtocol || aProtocol.length == 0) return SSPageRouterTypeUnknow;
+    if (![aProtocol hasPrefix:SSPR_SCHEME_MARK]) return SSPageRouterTypeUnknow;
+    
+    NSString *vm = [aProtocol substringFromIndex:SSPR_SCHEME_MARK.length];
+    if ([vm containsString:@"http://"] || [vm containsString:@"https://"]) return SSPageRouterTypeWebView;
+    
+    Class class = NSClassFromString(vm);
+    if (!class) return SSPageRouterTypeUnknow;
+    
+    if ([vm containsString:SSPR_TABBAR_MARK]) return SSPageRouterTypeTabbar;
+    return SSPageRouterTypePage;
+}
+
+- (SSPageRouterType)typeForViewModel:(id)viewModel {
+    if ([viewModel isKindOfClass:[SSTabbarViewModel class]]) {
+        return SSPageRouterTypeTabbar;
+    } else if ([viewModel isKindOfClass:[SSViewModel class]]) {
+        return SSPageRouterTypePage;
+    } else if ([viewModel isKindOfClass:[SSHTTPViewModel class]]) {
+        return SSPageRouterTypeWebView;
+    }
+    return SSPageRouterTypeUnknow;
+}
+
+- (BOOL)isProtocolValid:(NSString *)aProtocol {
+    if (!aProtocol || aProtocol.length == 0) return NO;
+    if (![aProtocol hasPrefix:SSPR_SCHEME_MARK]) return NO;
+    return YES;
 }
 
 @end

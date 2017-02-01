@@ -21,7 +21,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.tableView.tableFooterView = self.sheetView;
+    [self setSheetView:self.sheetView];
 }
 
 - (DTBUserDetailSheetView *)sheetView {

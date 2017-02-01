@@ -11,6 +11,7 @@
 #import "DTBLoginViewModel.h"
 #import "DTBLoginCell.h"
 #import "DTBLoginSheetView.h"
+#import <TPKeyboardAvoidingTableView.h>
 
 @interface DTBLoginController ()
 @property (nonatomic,strong) DTBLoginHeaderView *headerView;
@@ -25,7 +26,7 @@
     [super viewDidLoad];
     
     [self.navigationController.navigationBar setShadowImage:[UIImage new]];
-    [self clearNavigationBar];
+    [self clearNavigationBarBackgroundColor];
     
     [self.tableView setFrame:CGRectMake(0, -64, kScreenW, kScreenH)];
     [self.tableView setTableHeaderView:self.headerView];

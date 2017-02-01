@@ -12,6 +12,7 @@
 #import "DTBCommunityImageCell.h"
 #import "DTBCommunityImagesCell.h"
 #import "DTBCommunityModel.h"
+#import <TPKeyboardAvoidingTableView.h>
 
 
 @interface DTBClubController ()
@@ -52,7 +53,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     DTBCommunityModel *dataSource = self.viewModel.dataSource[indexPath.row];
     DTBCommunityCell *cell = [tableView dequeueReusableCellWithIdentifier:[DTBCommunityCell cellIdentifierAttachDataSource:dataSource]];
-    [cell bindWithDataSource:self.viewModel.dataSource[indexPath.row] indexPath:indexPath];
+    [cell bindWithDataSource:self.viewModel.dataSource[indexPath.row] forIndexPath:indexPath];
     return cell;
 }
 

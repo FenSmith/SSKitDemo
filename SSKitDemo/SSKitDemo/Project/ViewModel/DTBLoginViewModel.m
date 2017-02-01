@@ -14,9 +14,9 @@
 - (void)viewModelDidLoad {
     [super viewModelDidLoad];
     
-    self.leftBarButtons = @[[SSBarEntity entityContainsImage:@"icon-return-white" alsoScale:2.7f]];
+    self.leftBarButtons = @[[SSBarEntity setupEntityWithNormalImage:[[UIImage imageNamed:@"icon-return-white"] imageScale:2.7f]]];
     self.userRegistCommand = [[RACCommand alloc] initWithSignalBlock:^RACSignal *(id input) {
-        [SSPageRouter openProtocol:@"sspage://DTBRegistViewModel"];
+        [SSPageRouter openProtocol:@"sspr://DTBRegistViewModel"];
         return [RACSignal empty];
     }];
     
@@ -28,13 +28,13 @@
     
     @weakify(self);
     self.userLoginCommand = [[RACCommand alloc] initWithSignalBlock:^RACSignal *(id input) {
-        [SSDialog showDialogWithDetails:@"登录中"];
+        [SSDialog showDialogForDetail:@"登录中"];
         @strongify(self);
         return [[[[DTBRequestManager sharedManager] requestUserLogin:self.username password:self.password]
                 doNext:^(NSDictionary *params) {
                     [DTBUserModel insertUserData:params];
-                    [SSDialog showDialogWithType:SSDialogTypeCorrect details:@"登录成功"];
-                    [SSPageRouter pagePop:YES];
+                    [SSDialog showDialogWithType:SSDialogTypeCorrect forDetail:@"登录成功"];
+                    [SSPageRouter closePage];
                 }] doError:^(NSError *error) {
                     [SSErrorHandler errorHandlerWithError:error showInView:nil];
                 }];
@@ -42,7 +42,7 @@
 }
 
 - (RACSignal *)leftBarItemClickedCallback:(NSInteger)index {
-    [SSPageRouter pagePop:YES];
+    [SSPageRouter closePage];
     return [RACSignal empty];
 }
 

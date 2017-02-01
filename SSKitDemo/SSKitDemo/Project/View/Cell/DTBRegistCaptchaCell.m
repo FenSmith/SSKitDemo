@@ -55,7 +55,7 @@
     return self;
 }
 
-- (void)bindWithViewModel:(DTBCaptchaViewModel *)viewModel indexPath:(NSIndexPath *)indexPath {
+- (void)bindWithViewModel:(DTBCaptchaViewModel *)viewModel forIndexPath:(NSIndexPath *)indexPath {
     
     @weakify(self);
     [[[[[[self.resendButton rac_signalForControlEvents:1<<6]

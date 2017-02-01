@@ -6,7 +6,7 @@
 //  Copyright © 2016年 Quincy Yan. All rights reserved.
 //
 
-#import <SSKit/SSKitHeader.h>
+#import <SSMVVM/SSMVVM.h>
 
 @interface DTBTabbarViewModel : SSTabbarViewModel
 

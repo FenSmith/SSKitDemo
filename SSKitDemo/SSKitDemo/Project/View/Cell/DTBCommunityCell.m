@@ -42,7 +42,7 @@
     return self;
 }
 
-- (void)bindWithDataSource:(DTBCommunityModel *)dataSource indexPath:(NSIndexPath *)indexPath {
+- (void)bindWithDataSource:(DTBCommunityModel *)dataSource forIndexPath:(NSIndexPath *)indexPath {
     [self.avatorView sd_setImageWithURL:[NSURL URLWithString:dataSource.user.avator] placeholderImage:nil];
     self.nameLabel.text = dataSource.user.name;
     [self.watchButton setTitle:[NSString stringWithFormat:@" %@",dataSource.watchs] forState:0];

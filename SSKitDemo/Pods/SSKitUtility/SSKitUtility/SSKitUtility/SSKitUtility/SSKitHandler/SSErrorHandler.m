@@ -7,7 +7,7 @@
 //
 
 #import "SSErrorHandler.h"
-#import <SSDialog/SSDialog+SSAdd.h>
+#import <SSWrapper/SSDialog+SSAdd.h>
 
 @implementation SSErrorHandler
 
@@ -30,16 +30,16 @@
     }
     
     if ([self isNetworkError:error]) {
-        [SSDialog showDialogWithType:SSDialogTypeAlert details:@"网络连接异常" targetView:inView];
+        [SSDialog showDialogWithType:SSDialogTypeAlert forDetail:@"网络连接异常" inView:inView];
     } else {
         if ([msg isKindOfClass:[NSNull class]]) {
-            [SSDialog showDialogWithType:SSDialogTypeAlert details:@"服务器出错" targetView:inView];
+            [SSDialog showDialogWithType:SSDialogTypeAlert forDetail:@"服务器出错" inView:inView];
             return;
         }
         if (!msg || msg.length == 0) {
             msg = error.localizedDescription;
         }
-        [SSDialog showDialogWithType:SSDialogTypeAlert details:msg targetView:inView];
+        [SSDialog showDialogWithType:SSDialogTypeAlert forDetail:msg inView:inView];
     }
 }
 

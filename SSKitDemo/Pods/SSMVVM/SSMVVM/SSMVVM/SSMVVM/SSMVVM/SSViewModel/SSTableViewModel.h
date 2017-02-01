@@ -23,12 +23,25 @@
 @property (nonatomic,strong) NSArray *dataSource; // 数据源
 @property (nonatomic,strong) RACCommand *requestRemoteDataCommand; // 获取更多数据的指令
 
-// 获取数据方法
+/**
+ 设置初始页码
+ */
+- (NSInteger)pageForInitial;
+
+/**
+ 获取数据方法
+ */
 - (RACSignal *)requestRemoteDataSignalWithPage:(NSUInteger)page;
 
-@property (nonatomic,strong) RACCommand *didSelectedCommand; // Cell点击指令
+/**
+ Cell点击指令
 
-// 默认处理数据回调的方法
+ */
+@property (nonatomic,strong) RACCommand *didSelectedCommand;
+
+/**
+ 默认处理数据回调的方法
+ */
 - (void)dataSourceHandler:(NSArray *)arr;
 
 @end

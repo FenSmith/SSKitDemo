@@ -16,10 +16,10 @@
     self.requestCaptchaCommand = [[RACCommand alloc] initWithSignalBlock:^RACSignal *(id input) {
         return [[[[DTBRequestManager sharedManager] requestUserRegistCaptcha:input]
                 doNext:^(NSDictionary *params) {
-                    [SSDialog showDialogWithType:SSDialogTypeCorrect details:@"验证码请求成功"];
+                    [SSDialog showDialogWithType:SSDialogTypeCorrect forDetail:@"验证码请求成功"];
                 }] doError:^(NSError *error) {
                     [SSErrorHandler errorHandlerWithError:error showInView:nil];
-                    [SSPageRouter pagePop:YES];
+                    [SSPageRouter closePage];
                 }];
     }];
     
@@ -28,8 +28,8 @@
     }];
     
     self.userRegistCommand = [[RACCommand alloc] initWithSignalBlock:^RACSignal *(id input) {
-        [SSPageRouter openProtocol:@"sspage://DTBPsdViewModel" viewModelParams:@{@"phone":self.phone,
-                                                                                 @"captcha":self.captcha}];
+        [SSPageRouter openProtocol:@"sspr://DTBPsdViewModel" fetchParams:@{@"phone":self.phone,
+                                                                             @"captcha":self.captcha}];
         return [RACSignal empty];
     }];
 }

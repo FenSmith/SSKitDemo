@@ -12,21 +12,37 @@
 
 @interface SSTabbarViewModel : NSObject
 
-// 初始化后调用的方法
-- (void)viewModelDidLoad;
+/**
+ 初始化方法
+ */
+- (instancetype)initWithService:(id<SSViewModelService>)service fetchParams:(NSDictionary *)params;
 
-// 初始化方法
-- (instancetype)initWithService:(id<SSViewModelService>)service;
+/**
+ 初始化后调用的方法
+ */
+- (void)viewModelDidLoad;
 
 @property (nonatomic,strong) id<SSViewModelService> service;
 @property (nonatomic) SSPageRouterShowType showType;
 
-@property (nonatomic,strong) NSDictionary *params;
+/**
+ vm中自定义参数
+ 参数中的键值需与对应‘Controller’的属性名称一致
+ 以映射相应的数据
+ 例 : @{@"title":自定义参数} => self.title = @"自定义参数";
+ */
+@property (nonatomic,strong) NSDictionary *params4vm;
 
-@property (nonatomic,strong) NSArray *entitys;
+/**
+ 控制器中自定义参数
+ 上同
+ */
+@property (nonatomic,strong) NSDictionary *params4ctr;
+
+@property (nonatomic,strong) NSArray *wrappers;
 @property (nonatomic,strong) NSArray *viewModels;
 @property (nonatomic,strong) NSArray *viewControllers;
 
-- (BOOL)selectedHandlerAtIndex:(NSInteger)index;
+- (BOOL)selectWrapperAtIndex:(NSInteger)index;
 
 @end

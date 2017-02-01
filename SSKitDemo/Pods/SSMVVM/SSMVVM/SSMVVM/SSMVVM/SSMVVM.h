@@ -1,6 +1,6 @@
 //
-//  SSMVVM.h
-//  SSKitDemo
+//  SSMVVM_h
+//  SSKit
 //
 //  Created by Quincy on 2017/1/17.
 //  Copyright © 2017年 Quincy Yan. All rights reserved.

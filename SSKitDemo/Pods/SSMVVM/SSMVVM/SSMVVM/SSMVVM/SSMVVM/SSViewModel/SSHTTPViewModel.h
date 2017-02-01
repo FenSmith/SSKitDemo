@@ -9,5 +9,7 @@
 #import "SSViewModel.h"
 
 @interface SSHTTPViewModel : SSViewModel
-@property (nonatomic,copy) NSString *HTTPUrl;
+
+@property (nonatomic,copy) NSString *linkURL;
+
 @end

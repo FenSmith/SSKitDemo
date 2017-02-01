@@ -13,7 +13,6 @@
 // SSKit
 //-------
 #import <SSKit/SSKitHeader.h>
-#import <SSTabbar/SSTabbar.h>
 
 //-------------
 // App Category
@@ -40,5 +39,7 @@
 // Colors
 //-------
 #define DTBAppThemeColor [UIColor colorWithHexString:@"F95C64"]
+
+typedef void (^ SSOnlyTextBlock)();
 
 #endif /* SSKitDemo_pch */

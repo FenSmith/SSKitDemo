@@ -9,10 +9,11 @@
 #import "SSTabbarController.h"
 #import "SSPageRouter.h"
 #import "SSTabbarViewModel.h"
+#import "SSNavigatorStacks.h"
 
 #import <ReactiveCocoa/ReactiveCocoa.h>
 #import <ReactiveCocoa/RACEXTScope.h>
-#import <SSTabbar/SSTabbar.h>
+#import <SSWrapper/SSTabbar.h>
 
 @interface SSTabbarController()<SSTabbarDelegate>
 @property (nonatomic,strong) SSTabbar *tabbar;
@@ -53,11 +54,11 @@
          self.viewControllers = viewControllers;
      }];
     
-    [RACObserve(self.viewModel, entitys)
-     subscribeNext:^(NSArray *entitys) {
+    [RACObserve(self.viewModel, wrappers)
+     subscribeNext:^(NSArray *wrappers) {
          @strongify(self);
-         self.tabbar.entities = entitys;
-         [self.tabbar reloadAllEntities];
+         self.tabbar.wrappers = wrappers;
+         [self.tabbar reloadAllWrappers];
     }];
     
     [self.tabBar addSubview:self.tabbar];
@@ -71,8 +72,8 @@
     
 }
 
-- (BOOL)tabbar:(SSTabbar *)tabbar entitySelectedCallback:(NSInteger)index {
-    if (![self.viewModel selectedHandlerAtIndex:index]) {
+- (BOOL)tabbar:(SSTabbar *)aTabbar wrapperClickedAtIndex:(NSInteger)index {
+    if (![self.viewModel selectWrapperAtIndex:index]) {
         return NO;
     }
     

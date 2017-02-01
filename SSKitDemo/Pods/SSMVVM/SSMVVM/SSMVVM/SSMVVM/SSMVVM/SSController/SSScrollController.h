@@ -10,6 +10,7 @@
 #import <TPKeyboardAvoiding/TPKeyboardAvoidingScrollView.h>
 
 @interface SSScrollController : SSViewController
+
 @property (nonatomic,strong) TPKeyboardAvoidingScrollView *scrollView;
 
 @end

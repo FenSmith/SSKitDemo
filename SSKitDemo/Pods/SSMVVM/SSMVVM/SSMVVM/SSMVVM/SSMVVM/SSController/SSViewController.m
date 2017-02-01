@@ -10,7 +10,7 @@
 #import "SSBarEntity.h"
 #import "SSViewModel.h"
 
-#import <SSCategory/UIColor+SSKit.h>
+#import <SSKitUtility/SSCategory.h>
 #import <SSKitUtility/SSEnums.h>
 #import <SSKitUtility/SSColors.h>
 #import <SSKitUtility/SSAppHandler.h>
@@ -42,7 +42,9 @@
 - (instancetype)initWithViewModel:(SSViewModel *)viewModel {
     self = [super init];
     if (!self) return nil;
+    
     self.viewModel = viewModel;
+    
     return self;
 }
 
@@ -58,28 +60,27 @@
     [self.navigationController.navigationBar setShadowImage:[SSAppHandler sharedHander].navigationbarShadowImage];
 }
 
-- (void)clearNavigationBar {
+- (void)clearNavigationBarBackgroundColor {
     self.automaticallyAdjustsScrollViewInsets = YES;
     self.edgesForExtendedLayout = UIRectEdgeAll;
     
     [self.navigationController.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
 }
 
+- (void)clearNavigationBarShadowImage {
+    [self.navigationController.navigationBar setShadowImage:[UIImage new]];
+}
+
 - (void)resetNavibarColor:(UIColor *)color {
-    if (color) {
-        [self.navigationController.navigationBar setBackgroundImage:color.colorImage forBarMetrics:UIBarMetricsDefault];
-    }
+    if (!color) return;
+    [self.navigationController.navigationBar setBackgroundImage:color.colorImage forBarMetrics:UIBarMetricsDefault];
 }
 
 - (void)resetTitleColor:(UIColor *)color {
-    if (color) {
-        self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName : color,
-                                                                        NSFontAttributeName : [UIFont systemFontOfSize:17]};
-    }
-}
-
-- (void)resetShadowSpliter {
-    [self.navigationController.navigationBar setShadowImage:[UIImage new]];
+    if (!color) return;
+    NSFont *font = [self.navigationController.navigationBar.titleTextAttributes objectForKey:NSFontAttributeName];
+    self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName : color,
+                                                                    NSFontAttributeName : font};
 }
 
 - (void)bindViewModel{
@@ -107,11 +108,11 @@
               }
                   break;
               case SSPageTitleTypeLeft: {
-                  self.viewModel.leftBarButtons = @[[SSBarEntity entityContainsImage:[SSAppHandler sharedHander].navigationbarImage alsoTitle:[NSString stringWithFormat:@" %@",title]]];
+                  self.viewModel.leftBarButtons = @[[SSBarEntity setupEntityWithNormalImage:[SSAppHandler sharedHander].navigationbarImage withTitle:[NSString stringWithFormat:@" %@",title]]];
               }
                   break;
               case SSPageTitleTypeLeftOnlyTitle: {
-                  self.viewModel.leftBarButtons = @[[SSBarEntity entityContainsTitle:title]];
+                  self.viewModel.leftBarButtons = @[[SSBarEntity setupEntityWithTitle:title]];
               }
                   break;
               default:
@@ -137,22 +138,22 @@
             [entity setTag:i];
             
             if (isLeftEntitys) {
-                [entity.entityButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
+                [entity.internalButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
             } else {
-                [entity.entityButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
+                [entity.internalButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
             }
             
-            CGSize size = [entity sizeForEntity];
+            CGSize size = [entity calculateSizeForEntity];
             [entity setFrame:CGRectMake(0, 0, size.width, size.height)];
             [barButtons addObject:[[UIBarButtonItem alloc] initWithCustomView:entity]];
             
             @weakify(self);
-            [[entity.entityButton rac_signalForControlEvents:UIControlEventTouchUpInside]
+            [[entity.internalButton rac_signalForControlEvents:UIControlEventTouchUpInside]
              subscribeNext:^(id x) {
                  @strongify(self);
                  NSNumber *entityTag = [NSNumber numberWithInteger:entity.tag];
                  if (isLeftEntitys) {
-                     if (![self.viewModel hidesReturnButton] && entityTag.intValue == 0) {
+                     if (![self.viewModel hidesReturnNavigaionItem] && entityTag.intValue == 0) {
                          [self.viewModel.backBarCommand execute:nil];
                      }else {
                          [self.viewModel.leftBarCommand execute:entityTag];
@@ -170,7 +171,7 @@
     return UIStatusBarStyleDefault;
 }
 
-- (void)dealloc{
+- (void)dealloc {
     NSLog(@"dealloc:%@",NSStringFromClass([self class]));
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }

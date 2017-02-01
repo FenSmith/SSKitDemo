@@ -52,7 +52,7 @@
     return self;
 }
 
-- (void)bindWithViewModel:(SSViewModel *)viewModel dataSource:(DTBUserPageModel *)dataSource indexPath:(NSIndexPath *)indexPath {
+- (void)bindWithViewModel:(SSViewModel *)viewModel fetchDataSource:(DTBUserPageModel *)dataSource forIndexPath:(NSIndexPath *)indexPath {
     [self.iconView setImage:dataSource.icon forState:0];
     [self.iconView setBackgroundImage:dataSource.iconColor.colorImage forState:0];
     

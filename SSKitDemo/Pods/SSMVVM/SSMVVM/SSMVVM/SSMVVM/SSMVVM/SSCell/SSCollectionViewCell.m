@@ -7,13 +7,14 @@
 //
 
 #import "SSCollectionViewCell.h"
+#import "SSViewModel.h"
 
 @implementation SSCollectionViewCell
 
 - (void)bindWithDataSource:(NSObject *)dataSource {}
 
-- (void)bindWithViewModel:(SSViewModel *)viewModel andIndexpath:(NSIndexPath *)indexpath {}
+- (void)bindWithViewModel:(SSViewModel *)viewModel forIndexPath:(NSIndexPath *)indexPath {}
 
-- (void)bindWithViewModel:(SSViewModel *)viewModel dataSource:(NSObject *)dataSource indexpath:(NSIndexPath *)indexpath{};
+- (void)bindWithViewModel:(SSViewModel *)viewModel fetchDataSource:(NSObject *)dataSource forIndexPath:(NSIndexPath *)indexPath {};
 
 @end

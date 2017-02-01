@@ -7,17 +7,23 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "SSViewModel.h"
 
+@class SSViewModel;
 @interface SSCollectionViewCell : UICollectionViewCell
 
-// 绑定模型
+/**
+ 绑定模型
+ */
 - (void)bindWithDataSource:(NSObject *)dataSource;
 
-// 绑定‘ViewModel‘
-- (void)bindWithViewModel:(SSViewModel *)viewModel andIndexpath:(NSIndexPath *)indexpath;
+/**
+ 绑定‘ViewModel‘
+ */
+- (void)bindWithViewModel:(SSViewModel *)viewModel forIndexPath:(NSIndexPath *)indexPath;
 
-// 绑定‘ViewModel‘以及赋值
-- (void)bindWithViewModel:(SSViewModel *)viewModel dataSource:(NSObject *)dataSource indexpath:(NSIndexPath *)indexpath;
+/**
+ 绑定‘ViewModel‘以及赋值
+ */
+- (void)bindWithViewModel:(SSViewModel *)viewModel fetchDataSource:(NSObject *)dataSource forIndexPath:(NSIndexPath *)indexPath;
 
 @end

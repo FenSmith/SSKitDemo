@@ -1,1 +1,0 @@
-../../../SSCategory/SSCategoryDemo/SSCategory/Foundation/UIColor+SSKit.h

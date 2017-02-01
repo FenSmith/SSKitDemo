@@ -10,6 +10,7 @@
 #import "DTBCaptchaViewModel.h"
 #import "DTBRegistCaptchaCell.h"
 #import "DTBCaptchaSheetView.h"
+#import <TPKeyboardAvoidingTableView.h>
 
 @interface DTBCaptchaController ()
 @property (nonatomic,strong) DTBCaptchaSheetView *sheetView;
@@ -34,7 +35,7 @@
     DTBRegistCaptchaCell *cell = [tableView dequeueReusableCellWithIdentifier:@"DTBRegistCaptchaCell"];
     
     @weakify(self);
-    [cell bindWithViewModel:self.viewModel indexPath:indexPath];
+    [cell bindWithViewModel:self.viewModel forIndexPath:indexPath];
     cell.textField.placeholder = @"验证码";
     cell.callback = ^(NSString *str){
         @strongify(self);

@@ -6,7 +6,7 @@
 //  Copyright © 2016年 Quincy Yan. All rights reserved.
 //
 
-#import <SSKit/SSKitHeader.h>
+#import <SSMVVM/SSMVVM.h>
 
 @interface DTBPsdCell : SSTableViewCell
 
@@ -14,6 +14,6 @@
 @property (nonatomic,copy) NSString *placeHolder;
 @property (nonatomic) BOOL isPassword;
 
-@property (nonatomic,copy) TextCallback callback;
+@property (nonatomic,copy) SSOnlyTextBlock callback;
 
 @end

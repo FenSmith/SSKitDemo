@@ -14,7 +14,7 @@
 - (void)viewModelDidLoad {
     [super viewModelDidLoad];
     
-    self.page = 0;
+    self.page = [self pageForInitial];
     self.dataSource = [NSMutableArray array];
     
     @weakify(self);
@@ -22,6 +22,10 @@
         @strongify(self);
         return [self requestRemoteDataSignalWithPage:page.unsignedIntegerValue];
     }];
+}
+
+- (NSInteger)pageForInitial {
+    return 0;
 }
 
 - (void)dataSourceHandler:(NSArray *)arr {

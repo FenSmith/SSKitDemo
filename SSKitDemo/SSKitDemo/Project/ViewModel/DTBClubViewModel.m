@@ -17,10 +17,10 @@
     self.isAllowLoadData = YES;
     self.isAllowLoadAdditionalData = YES;
     
-    self.rightBarButtons = @[[SSBarEntity entityContainsImage:@"icon-club-add" alsoScale:2.8f]];
+    self.rightBarButtons = @[[SSBarEntity setupEntityWithNormalImage:[[UIImage imageNamed:@"icon-club-add"] imageScale:2.8f]]];
     
     self.didSelectedCommand = [[RACCommand alloc] initWithSignalBlock:^RACSignal *(NSIndexPath *indexPath) {
-        [SSPageRouter openProtocol:@"sspage://DTBClubDetailViewModel" viewModelParams:@{@"object":self.dataSource[indexPath.row]}];
+        [SSPageRouter openProtocol:@"sspr://DTBClubDetailViewModel" fetchParams:@{@"object":self.dataSource[indexPath.row]}];
         return [RACSignal empty];
     }];
 }
@@ -67,7 +67,7 @@
 }
 
 - (RACSignal *)rightBarItemClickedCallback:(NSInteger)index {
-    [SSPageRouter presentProtocol:@"sspage://DTBClubAddViewModel"];
+    [SSPageRouter presentProtocol:@"sspr://DTBClubAddViewModel"];
     return [RACSignal empty];
 }
 

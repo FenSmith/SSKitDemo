@@ -15,20 +15,20 @@
     
     NSArray *viewModels = @[@"DTBClubViewModel",@"DTBUserViewModel"];
     self.viewModels = [viewModels objsMap:^id(NSString *str, NSInteger index) {
-        return [[SSPageRouter sharedRouter] viewModelFromProtocol:[NSString stringWithFormat:@"sspage://%@",str]];
+        return [[SSPageRouter sharedRouter] viewModelForProtocol:[NSString stringWithFormat:@"sspr://%@",str] fetchParams:nil];
     }];
     
-    SSTabbarEntity *clubObj = [[SSTabbarEntity alloc] init];
-    [clubObj setImage:@"icon-club-n" alsoText:nil forControlState:0];
-    [clubObj setImage:@"icon-club-s" alsoText:nil forControlState:1<<2];
-    clubObj.imageSize = CGSizeMake(35, 35);
+    SSTabbarWrapper *clubObj = [[SSTabbarWrapper alloc] init];
+    [clubObj setWrapperImage:@"icon-club-n" withText:nil forControlState:0];
+    [clubObj setWrapperImage:@"icon-club-s" withText:nil forControlState:1<<2];
+    clubObj.wrapperImageSize = CGSizeMake(35, 35);
     
-    SSTabbarEntity *userObj = [[SSTabbarEntity alloc] init];
-    [userObj setImage:@"icon-user-n" alsoText:nil forControlState:0];
-    [userObj setImage:@"icon-user-s" alsoText:nil forControlState:1<<2];
-    userObj.imageSize = CGSizeMake(32, 35);
+    SSTabbarWrapper *userObj = [[SSTabbarWrapper alloc] init];
+    [userObj setWrapperImage:@"icon-user-n" withText:nil forControlState:0];
+    [userObj setWrapperImage:@"icon-user-s" withText:nil forControlState:1<<2];
+    userObj.wrapperImageSize = CGSizeMake(32, 35);
     
-    self.entitys = @[clubObj,userObj];
+    self.wrappers = @[clubObj,userObj];
 }
 
 @end

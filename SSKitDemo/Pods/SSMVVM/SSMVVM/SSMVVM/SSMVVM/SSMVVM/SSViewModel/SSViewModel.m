@@ -10,8 +10,8 @@
 #import "SSPageRouter.h"
 #import "SSBarEntity.h"
 
-#import <SSCategory/UIImage+SSKit.h>
-#import <SSCategory/NSObject+Property.h>
+#import <SSKitUtility/UIImage+SSKit.h>
+#import <SSKitUtility/NSObject+Property.h>
 #import <SSKitUtility/SSAppHandler.h>
 #import <ReactiveCocoa/RACEXTScope.h>
 
@@ -25,13 +25,9 @@
     SSViewModel *viewModel = [super allocWithZone:zone];
     
     @weakify(viewModel);
-    RACSignal *initialSignal = [viewModel rac_signalForSelector:@selector(initWithService:)];
-    RACSignal *initialTitleSignal = [viewModel rac_signalForSelector:@selector(initWithService:alsoTitle:)];
-    RACSignal *initialParamsSignal = [viewModel rac_signalForSelector:@selector(initWithService:alsoViewModleParams:)];
+    RACSignal *initialParamsSignal = [viewModel rac_signalForSelector:@selector(initWithService:fetchParams:)];
     
-    [[RACSignal merge:@[initialSignal,
-                       initialTitleSignal,
-                       initialParamsSignal]]
+    [[RACSignal merge:@[initialParamsSignal]]
      subscribeNext:^(id x) {
          @strongify(viewModel);
          [viewModel viewModelDidLoad];
@@ -41,27 +37,17 @@
     return viewModel;
 }
 
-- (instancetype)initWithService:(id<SSViewModelService>)service {
+- (instancetype)initWithService:(id<SSViewModelService>)service fetchParams:(NSDictionary *)params {
     self = [super init];
     if (!self) return nil;
+    
     self.service = service;
-    return self;
-}
-
-- (instancetype)initWithService:(id<SSViewModelService>)service alsoViewModleParams:(NSDictionary *)params {
-    self = [super init];
-    if (!self) return nil;
-    self.service = service;
-    self.viewModelParams = params;
-    [self objAllocateValues:params];
-    return self;
-}
-
-- (instancetype)initWithService:(id<SSViewModelService>)service alsoTitle:(NSString *)title {
-    self = [super init];
-    if (!self) return nil;
-    self.service = service;
-    self.title = title;
+    
+    if (params) {
+        self.params4vm = params;
+        [self objAllocateValues:params];
+    }
+    
     return self;
 }
 
@@ -76,11 +62,11 @@
         @strongify(self);
         switch (self.showType) {
             case SSPageRouterShowTypePresent:{
-                [SSPageRouter pageDismiss:YES alsoCallback:nil];
+                [SSPageRouter closePageAttachVoidBlock:nil isAnimated:YES];
             }
                 break;
             case SSPageRouterShowTypePush:{
-                [SSPageRouter pagePop:YES];
+                [SSPageRouter closePageWithAnimation];
             }
                 break;
             default:
@@ -99,9 +85,9 @@
         return [self rightBarItemClickedCallback:index.integerValue];
     }];
     
-    if (![self hidesReturnButton] && [SSAppHandler sharedHander].navigationTitleType == SSPageTitleTypeCenter) {
-        self.leftBarButtons = @[[SSBarEntity entityContainsImage:[SSAppHandler sharedHander].navigationbarImage
-                                                  highlightImage:[SSAppHandler sharedHander].navigationbarHighlightImage]];
+    if (![self hidesReturnNavigaionItem] && [SSAppHandler sharedHander].navigationTitleType == SSPageTitleTypeCenter) {
+        self.leftBarButtons = @[[SSBarEntity setupEntityWithNormalImage:[SSAppHandler sharedHander].navigationbarImage
+                                                     withHighlightImage:[SSAppHandler sharedHander].navigationbarHighlightImage]];
     }
 };
 
@@ -121,7 +107,7 @@
     
 }
 
-- (BOOL)hidesReturnButton {
+- (BOOL)hidesReturnNavigaionItem {
     return NO;
 }
 

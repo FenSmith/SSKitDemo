@@ -18,9 +18,6 @@ case "${TARGETED_DEVICE_FAMILY}" in
   2)
     TARGET_DEVICE_ARGS="--target-device ipad"
     ;;
-  3)
-    TARGET_DEVICE_ARGS="--target-device tv"
-    ;;
   *)
     TARGET_DEVICE_ARGS="--target-device mac"
     ;;
@@ -79,16 +76,16 @@ EOM
 if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_resource "SSKitUtility/SSKitUtility/SSKitUtility/SSKitUtility/Resource/SSKIT_NAVIBAR_RETURN.png"
   install_resource "SSKitUtility/SSKitUtility/SSKitUtility/SSKitUtility/Resource/SSKIT_NAVIBAR_RETURN2.png"
-  install_resource "SSStatus/SSStatusDemo/SSStatus/Resources/SSKIT_STATUS_EMPTYDATA.png"
-  install_resource "SSStatus/SSStatusDemo/SSStatus/Resources/SSKIT_STATUS_NETWORKERROR.png"
-  install_resource "SSStatus/SSStatusDemo/SSStatus/Resources/SSKIT_STATUS_SERVEERROR.png"
+  install_resource "SSWrapper/SSWrapper/SSWrapper/SSWrapper/SSStatus/Resources/SSKIT_STATUS_EMPTYDATA.png"
+  install_resource "SSWrapper/SSWrapper/SSWrapper/SSWrapper/SSStatus/Resources/SSKIT_STATUS_NETWORKERROR.png"
+  install_resource "SSWrapper/SSWrapper/SSWrapper/SSWrapper/SSStatus/Resources/SSKIT_STATUS_SERVEERROR.png"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_resource "SSKitUtility/SSKitUtility/SSKitUtility/SSKitUtility/Resource/SSKIT_NAVIBAR_RETURN.png"
   install_resource "SSKitUtility/SSKitUtility/SSKitUtility/SSKitUtility/Resource/SSKIT_NAVIBAR_RETURN2.png"
-  install_resource "SSStatus/SSStatusDemo/SSStatus/Resources/SSKIT_STATUS_EMPTYDATA.png"
-  install_resource "SSStatus/SSStatusDemo/SSStatus/Resources/SSKIT_STATUS_NETWORKERROR.png"
-  install_resource "SSStatus/SSStatusDemo/SSStatus/Resources/SSKIT_STATUS_SERVEERROR.png"
+  install_resource "SSWrapper/SSWrapper/SSWrapper/SSWrapper/SSStatus/Resources/SSKIT_STATUS_EMPTYDATA.png"
+  install_resource "SSWrapper/SSWrapper/SSWrapper/SSWrapper/SSStatus/Resources/SSKIT_STATUS_NETWORKERROR.png"
+  install_resource "SSWrapper/SSWrapper/SSWrapper/SSWrapper/SSStatus/Resources/SSKIT_STATUS_SERVEERROR.png"
 fi
 
 mkdir -p "${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}"
